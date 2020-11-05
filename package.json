@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-sample-plugin",
-  "version": "0.9.7",
-  "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+  "name": "obsidian-latex-environments",
+  "version": "0.0.1",
+  "description": "Allows to quickly insert and change latex environments within math environments.",
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
