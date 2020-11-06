@@ -11,36 +11,47 @@ export default class LatexEnvironments extends Plugin {
     });
 
     this.addCommand({
-      id: 'insert-new-env',
-      name: 'Insert new environment',
-      checkCallback: (checking) => {
-        const leaf = this.app.workspace.activeLeaf;
-        if (leaf) {
-          const view = leaf.view as MarkdownView;
-          const doc = view.sourceMode.cmEditor;
-          const cursor = doc.getCursor();
+      id: 'insert-latex-env',
+      name: 'Insert LaTeX environment',
+      checkCallback: this.mathModeCallback(this.insertEnvironment),
+    });
 
-          if (doc.getModeAt(cursor).name !== 'stex') {
-            return false;
-          }
-
-          if (!checking) {
-            this.insertEnvironment(cursor, doc);
-          }
-          return true;
-        }
-        return false;
-      },
+    this.addCommand({
+      id: 'change-latex-env',
+      name: 'Change LaTeX environment',
+      checkCallback: this.mathModeCallback(this.changeEnvironment),
     });
 
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
-  private insertEnvironment(
+  private mathModeCallback(
+    callback: (cursor: CodeMirror.Position, doc: CodeMirror.Editor) => void,
+  ) {
+    return (checking: boolean) => {
+      const leaf = this.app.workspace.activeLeaf;
+      if (leaf) {
+        const view = leaf.view as MarkdownView;
+        const doc = view.sourceMode.cmEditor;
+        const cursor = doc.getCursor();
+
+        if (doc.getModeAt(cursor).name !== 'stex') {
+          return false;
+        }
+
+        if (!checking) {
+          callback(cursor, doc);
+        }
+        return true;
+      }
+      return false;
+    };
+  }
+  private insertEnvironment = (
     cursor: CodeMirror.Position,
     doc: CodeMirror.Editor,
     envName?: string,
-  ) {
+  ) => {
     envName ||= this.settings.defaultEnvironment;
     const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
     doc.replaceRange(newEnvironment, cursor);
