@@ -5,6 +5,7 @@ devDependencies:
   '@rollup/plugin-commonjs': 15.1.0_rollup@2.33.1
   '@rollup/plugin-node-resolve': 9.0.0_rollup@2.33.1
   '@rollup/plugin-typescript': 6.1.0_66c0221b3cde985c2512091a2e846a04
+  '@types/codemirror': 0.0.98
   '@types/node': 14.14.6
   '@typescript-eslint/eslint-plugin': 4.6.1_ef70842fa77cd1a4abb2a38c98d2a1a7
   '@typescript-eslint/parser': 4.6.1_eslint@7.12.1+typescript@4.0.5
@@ -3589,6 +3590,7 @@ specifiers:
   '@rollup/plugin-commonjs': ^15.1.0
   '@rollup/plugin-node-resolve': ^9.0.0
   '@rollup/plugin-typescript': ^6.0.0
+  '@types/codemirror': ^0.0.98
   '@types/node': ^14.14.2
   '@typescript-eslint/eslint-plugin': ^4.6.1
   '@typescript-eslint/parser': ^4.6.1

@@ -1,5 +1,6 @@
 import { App, MarkdownView, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import { LatexEnvironmentsSettings } from './settings';
+import * as CodeMirror from 'codemirror';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings;
@@ -24,15 +25,7 @@ export default class LatexEnvironments extends Plugin {
           }
 
           if (!checking) {
-            const pos = {
-              line: cursor.line + 1,
-              ch: 0,
-            };
-            const envName = this.settings.defaultEnvironment;
-            const newEnvironment = `\\begin{${envName}}\n\n\\end{${envName}}\n`;
-            doc.replaceRange(newEnvironment, pos);
-            doc.setCursor({ line: cursor.line + 2, ch: 0 });
-            doc.focus();
+            this.insertEnvironment(cursor, doc);
           }
           return true;
         }
@@ -41,6 +34,22 @@ export default class LatexEnvironments extends Plugin {
     });
 
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
+  }
+
+  private insertEnvironment(
+    cursor: CodeMirror.Position,
+    doc: CodeMirror.Editor,
+    envName?: string,
+  ) {
+    const pos = {
+      line: cursor.line + 1,
+      ch: 0,
+    };
+    envName ||= this.settings.defaultEnvironment;
+    const newEnvironment = `\\begin{${envName}}\n\n\\end{${envName}}\n`;
+    doc.replaceRange(newEnvironment, pos);
+    doc.setCursor({ line: cursor.line + 2, ch: 0 });
+    doc.focus();
   }
 
   // onUnload(): void {}
