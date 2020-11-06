@@ -27,6 +27,15 @@ export default class LatexEnvironments extends Plugin {
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
+  private static isMathMode(
+    cursor: CodeMirror.Position,
+    doc: CodeMirror.Editor,
+  ) {
+    const token = doc.getTokenAt(cursor);
+    const state = token.state;
+    return state.hmdInnerStyle === 'math';
+  }
+
   private mathModeCallback(
     callback: (cursor: CodeMirror.Position, doc: CodeMirror.Editor) => void,
   ) {
@@ -37,7 +46,7 @@ export default class LatexEnvironments extends Plugin {
         const doc = view.sourceMode.cmEditor;
         const cursor = doc.getCursor();
 
-        if (doc.getModeAt(cursor).name !== 'stex') {
+        if (!LatexEnvironments.isMathMode(cursor, doc)) {
           return false;
         }
 
