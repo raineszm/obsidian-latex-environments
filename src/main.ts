@@ -12,21 +12,28 @@ export default class LatexEnvironments extends Plugin {
     this.addCommand({
       id: 'insert-new-env',
       name: 'Insert new environment',
-      callback: () => {
+      checkCallback: (checking) => {
         const leaf = this.app.workspace.activeLeaf;
         if (leaf) {
           const view = leaf.view as MarkdownView;
           const doc = view.sourceMode.cmEditor;
           const cursor = doc.getCursor();
-          const pos = {
-            line: cursor.line + 1,
-            ch: 0,
-          };
-          const envName = this.settings.defaultEnvironment;
-          const newEnvironment = `\\begin{${envName}}\n\n\\end{${envName}}\n`;
-          doc.replaceRange(newEnvironment, pos);
-          doc.setCursor({ line: cursor.line + 2, ch: 0 });
-          doc.focus();
+
+          if (doc.getModeAt(cursor).name !== 'stex') {
+            return false;
+          }
+
+          if (!checking) {
+            const pos = {
+              line: cursor.line + 1,
+              ch: 0,
+            };
+            const envName = this.settings.defaultEnvironment;
+            const newEnvironment = `\\begin{${envName}}\n\n\\end{${envName}}\n`;
+            doc.replaceRange(newEnvironment, pos);
+            doc.setCursor({ line: cursor.line + 2, ch: 0 });
+            doc.focus();
+          }
           return true;
         }
         return false;
