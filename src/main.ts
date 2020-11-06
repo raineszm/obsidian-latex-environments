@@ -2,6 +2,7 @@ import { App, MarkdownView, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import { LatexEnvironmentsSettings } from './settings';
 import * as CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
+import { EnvModal } from './envmodal';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings;
@@ -48,24 +49,28 @@ export default class LatexEnvironments extends Plugin {
       return false;
     };
   }
+
   private insertEnvironment = (
     cursor: CodeMirror.Position,
     doc: CodeMirror.Editor,
-    envName?: string,
   ) => {
-    envName ||= this.settings.defaultEnvironment;
-    const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
-    doc.replaceRange(newEnvironment, cursor);
-    doc.setCursor({ line: cursor.line + 2, ch: 0 });
-    doc.focus();
+    const picker = new EnvModal(
+      this.app,
+      this.settings.defaultEnvironment,
+      (envName: string) => {
+        const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
+        doc.replaceRange(newEnvironment, cursor);
+        doc.setCursor({ line: cursor.line + 2, ch: 0 });
+        doc.focus();
+      },
+    );
+    picker.open();
   };
 
   private changeEnvironment = (
     cursor: CodeMirror.Position,
     doc: CodeMirror.Editor,
-    envName?: string,
   ) => {
-    envName ||= this.settings.defaultEnvironment;
     const block = new MathBlock(doc, cursor);
     const current = block.getEnclosingEnvironment(cursor);
     let start = { from: block.startPosition, to: block.startPosition };
@@ -76,29 +81,20 @@ export default class LatexEnvironments extends Plugin {
         end = current.end;
       }
     }
-    doc.replaceRange(`\\begin{${envName}}`, start.from, start.to);
-    doc.replaceRange(`\\end{${envName}}`, end.from, end.to);
-    doc.focus();
+    const picker = new EnvModal(
+      this.app,
+      current.name || this.settings.defaultEnvironment,
+      (envName: string) => {
+        doc.replaceRange(`\\begin{${envName}}`, start.from, start.to);
+        doc.replaceRange(`\\end{${envName}}`, end.from, end.to);
+        doc.focus();
+      },
+    );
+    picker.open();
   };
 
   // onUnload(): void {}
 }
-
-// class SampleModal extends Modal {
-//   constructor(app: App) {
-//     super(app);
-//   }
-//
-//   onOpen() {
-//     const { contentEl } = this;
-//     contentEl.setText('Woah!');
-//   }
-//
-//   onClose() {
-//     const { contentEl } = this;
-//     contentEl.empty();
-//   }
-// }
 
 class LatexEnvironmentsSettingTab extends PluginSettingTab {
   private plugin: LatexEnvironments;
