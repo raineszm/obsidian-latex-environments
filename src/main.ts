@@ -41,13 +41,9 @@ export default class LatexEnvironments extends Plugin {
     doc: CodeMirror.Editor,
     envName?: string,
   ) {
-    const pos = {
-      line: cursor.line + 1,
-      ch: 0,
-    };
     envName ||= this.settings.defaultEnvironment;
-    const newEnvironment = `\\begin{${envName}}\n\n\\end{${envName}}\n`;
-    doc.replaceRange(newEnvironment, pos);
+    const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
+    doc.replaceRange(newEnvironment, cursor);
     doc.setCursor({ line: cursor.line + 2, ch: 0 });
     doc.focus();
   }
