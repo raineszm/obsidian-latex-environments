@@ -1,6 +1,7 @@
 import { App, MarkdownView, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import { LatexEnvironmentsSettings } from './settings';
 import * as CodeMirror from 'codemirror';
+import { MathBlock } from './mathblock';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings;
@@ -57,7 +58,28 @@ export default class LatexEnvironments extends Plugin {
     doc.replaceRange(newEnvironment, cursor);
     doc.setCursor({ line: cursor.line + 2, ch: 0 });
     doc.focus();
-  }
+  };
+
+  private changeEnvironment = (
+    cursor: CodeMirror.Position,
+    doc: CodeMirror.Editor,
+    envName?: string,
+  ) => {
+    envName ||= this.settings.defaultEnvironment;
+    const block = new MathBlock(doc, cursor);
+    const current = block.getEnclosingEnvironment(cursor);
+    let start = { from: block.startPosition, to: block.startPosition };
+    let end = { from: block.endPosition, to: block.endPosition };
+    if (current) {
+      start = current.start;
+      if (current.end) {
+        end = current.end;
+      }
+    }
+    doc.replaceRange(`\\begin{${envName}}`, start.from, start.to);
+    doc.replaceRange(`\\end{${envName}}`, end.from, end.to);
+    doc.focus();
+  };
 
   // onUnload(): void {}
 }
