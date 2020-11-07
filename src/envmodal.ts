@@ -20,22 +20,29 @@ export class EnvModal extends Modal {
         text.setValue(this.name).onChange((value) => (this.name = value));
       })
       .addButton((button) => {
-        button.setButtonText('Go').onClick(() => {
-          this.close();
-        });
+        button
+          .setButtonText('Go')
+          .setCta()
+          .onClick(() => {
+            this.submit();
+          });
       });
     const textEntry = setting.controlEl.children[0] as HTMLElement;
     textEntry.focus();
     textEntry.addEventListener('keydown', (event) => {
       if (event.key == 'Enter') {
-        this.close();
+        this.submit();
       }
     });
+  }
+
+  private submit(): void {
+    this.callback(this.name);
+    this.close();
   }
 
   onClose(): void {
     const { contentEl } = this;
     contentEl.empty();
-    this.callback(this.name);
   }
 }
