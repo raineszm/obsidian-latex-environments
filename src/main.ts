@@ -60,7 +60,7 @@ export default class LatexEnvironments extends Plugin {
         doc.getCursor('to'),
       );
     }
-    const picker = new EnvModal(
+    new EnvModal(
       this.app,
       this.settings.defaultEnvironment,
       (envName: string) => {
@@ -69,8 +69,7 @@ export default class LatexEnvironments extends Plugin {
         doc.setCursor({ line: cursor.line + 2, ch: 0 });
         doc.focus();
       },
-    );
-    picker.open();
+    ).open();
   };
 
   private changeEnvironment = (
@@ -85,7 +84,7 @@ export default class LatexEnvironments extends Plugin {
       start = current.start;
       end = current.end;
     }
-    const picker = new EnvModal(
+    new EnvModal(
       this.app,
       current.name || this.settings.defaultEnvironment,
       (envName: string) => {
@@ -95,8 +94,7 @@ export default class LatexEnvironments extends Plugin {
         });
         doc.focus();
       },
-    );
-    picker.open();
+    ).open();
   };
 
   // onUnload(): void {}
@@ -105,7 +103,7 @@ export default class LatexEnvironments extends Plugin {
     from: CodeMirror.Position,
     to: CodeMirror.Position,
   ) {
-    const picker = new EnvModal(
+    new EnvModal(
       this.app,
       this.settings.defaultEnvironment,
       (envName: string) => {
@@ -119,8 +117,7 @@ export default class LatexEnvironments extends Plugin {
         });
         doc.focus();
       },
-    );
-    picker.open();
+    ).open();
   }
 }
 
