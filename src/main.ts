@@ -89,8 +89,10 @@ export default class LatexEnvironments extends Plugin {
       this.app,
       current.name || this.settings.defaultEnvironment,
       (envName: string) => {
-        doc.replaceRange(`\\begin{${envName}}`, start.from, start.to);
-        doc.replaceRange(`\\end{${envName}}`, end.from, end.to);
+        doc.operation(() => {
+          doc.replaceRange(`\\begin{${envName}}`, start.from, start.to);
+          doc.replaceRange(`\\end{${envName}}`, end.from, end.to);
+        });
         doc.focus();
       },
     );
@@ -107,13 +109,15 @@ export default class LatexEnvironments extends Plugin {
       this.app,
       this.settings.defaultEnvironment,
       (envName: string) => {
-        doc.replaceRange(`\n\\end{${envName}}`, to);
-        doc.replaceRange(`\\begin{${envName}}\n`, from);
-        doc.focus();
-        doc.setSelection({
-          line: from.line + 1,
-          ch: 0,
+        doc.operation(() => {
+          doc.replaceRange(`\n\\end{${envName}}`, to);
+          doc.replaceRange(`\\begin{${envName}}\n`, from);
+          doc.setSelection({
+            line: from.line + 1,
+            ch: 0,
+          });
         });
+        doc.focus();
       },
     );
     picker.open();
