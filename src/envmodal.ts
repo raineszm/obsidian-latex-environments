@@ -11,13 +11,18 @@ export class EnvModal extends Modal {
 
   onOpen(): void {
     const { contentEl } = this;
-    const prompt = document.createElement('h2');
-    prompt.innerText = 'Environment?';
-    contentEl.appendChild(prompt);
-    const setting = new Setting(contentEl)
+    contentEl.createEl('h2', { text: 'Environment?' });
+    new Setting(contentEl)
       .setName('new name')
       .addText((text) => {
         text.setValue(this.name).onChange((value) => (this.name = value));
+        const textEl = text.inputEl;
+        textEl.addEventListener('keydown', (event) => {
+          if (event.key == 'Enter') {
+            this.submit();
+          }
+        });
+        textEl.focus();
       })
       .addButton((button) => {
         button
@@ -27,13 +32,6 @@ export class EnvModal extends Modal {
             this.submit();
           });
       });
-    const textEntry = setting.controlEl.children[0] as HTMLElement;
-    textEntry.focus();
-    textEntry.addEventListener('keydown', (event) => {
-      if (event.key == 'Enter') {
-        this.submit();
-      }
-    });
   }
 
   private submit(): void {
