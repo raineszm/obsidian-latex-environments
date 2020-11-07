@@ -41,9 +41,8 @@ export default class LatexEnvironments extends Plugin {
   ) {
     return (checking: boolean) => {
       const leaf = this.app.workspace.activeLeaf;
-      if (leaf) {
-        const view = leaf.view as MarkdownView;
-        const doc = view.sourceMode.cmEditor;
+      if (leaf && leaf.view instanceof MarkdownView) {
+        const doc = leaf.view.sourceMode.cmEditor;
         const cursor = doc.getCursor();
 
         if (!LatexEnvironments.isMathMode(cursor, doc)) {
