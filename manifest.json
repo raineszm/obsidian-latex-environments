@@ -1,7 +1,7 @@
 {
   "id": "obsidian-latex-environments",
   "name": "Latex Environments",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Allows to quickly insert and change latex environments within math environments.",
   "author": "Zach Raines",
   "authorUrl": "https://github.com/raineszm/obsidian-latex-environments",
