@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](https://github.com/raineszm/obsidian-latex-environments/compare/v0.0.1...v0.0.2) (2020-11-07)
+
+
+### Features
+
+* allow wrapping selected text with an environment ([4207c68](https://github.com/raineszm/obsidian-latex-environments/commit/4207c68d10fededfc6f85801917313b635970375))
+* wrap modifications in CodeMirror.operation ([adc126b](https://github.com/raineszm/obsidian-latex-environments/commit/adc126bc70a3ab133f9827b52c5d631aa9b04215))
+
+
+### Bug Fixes
+
+* use hmdInnerMode to check for math state ([be524f0](https://github.com/raineszm/obsidian-latex-environments/commit/be524f039ecabdb75f5020da2659608e42741cdf)), closes [#1](https://github.com/raineszm/obsidian-latex-environments/issues/1)
+
 ### 0.0.1 (2020-11-06)
 
 
