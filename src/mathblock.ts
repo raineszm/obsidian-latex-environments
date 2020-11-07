@@ -96,6 +96,15 @@ export class MathBlock {
     env.end = this.getEnclosingEnd(env.name, cursor);
     return env;
   }
+
+  public static isMathMode(
+    cursor: CodeMirror.Position,
+    doc: CodeMirror.Editor,
+  ): boolean {
+    const token = doc.getTokenAt(cursor);
+    const state = token.state;
+    return state.hmdInnerStyle === 'math';
+  }
 }
 
 type Range = {

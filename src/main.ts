@@ -27,15 +27,6 @@ export default class LatexEnvironments extends Plugin {
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
-  private static isMathMode(
-    cursor: CodeMirror.Position,
-    doc: CodeMirror.Editor,
-  ) {
-    const token = doc.getTokenAt(cursor);
-    const state = token.state;
-    return state.hmdInnerStyle === 'math';
-  }
-
   private mathModeCallback(
     callback: (cursor: CodeMirror.Position, doc: CodeMirror.Editor) => void,
   ) {
@@ -45,7 +36,7 @@ export default class LatexEnvironments extends Plugin {
         const doc = leaf.view.sourceMode.cmEditor;
         const cursor = doc.getCursor();
 
-        if (!LatexEnvironments.isMathMode(cursor, doc)) {
+        if (!MathBlock.isMathMode(cursor, doc)) {
           return false;
         }
 
@@ -85,9 +76,7 @@ export default class LatexEnvironments extends Plugin {
     let end = { from: block.endPosition, to: block.endPosition };
     if (current) {
       start = current.start;
-      if (current.end) {
-        end = current.end;
-      }
+      end = current.end;
     }
     const picker = new EnvModal(
       this.app,
@@ -117,7 +106,7 @@ class LatexEnvironmentsSettingTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    containerEl.createEl('h2', { text: 'Settings for latex environments.' });
+    containerEl.createEl('h2', { text: 'Settings for latex environments' });
 
     new Setting(containerEl)
       .setName('Default environment')

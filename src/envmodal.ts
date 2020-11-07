@@ -15,8 +15,7 @@ export class EnvModal extends Modal {
     prompt.innerText = 'Environment?';
     contentEl.appendChild(prompt);
     const setting = new Setting(contentEl)
-      .setName('env name')
-      .setDesc('new name for the environment')
+      .setName('new name')
       .addText((text) => {
         text.setValue(this.name).onChange((value) => (this.name = value));
       })
