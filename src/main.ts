@@ -53,6 +53,13 @@ export default class LatexEnvironments extends Plugin {
     cursor: CodeMirror.Position,
     doc: CodeMirror.Editor,
   ) => {
+    if (doc.somethingSelected()) {
+      return this.wrapEnvironment(
+        doc,
+        doc.getCursor('from'),
+        doc.getCursor('to'),
+      );
+    }
     const picker = new EnvModal(
       this.app,
       this.settings.defaultEnvironment,
@@ -91,6 +98,26 @@ export default class LatexEnvironments extends Plugin {
   };
 
   // onUnload(): void {}
+  private wrapEnvironment(
+    doc: CodeMirror.Editor,
+    from: CodeMirror.Position,
+    to: CodeMirror.Position,
+  ) {
+    const picker = new EnvModal(
+      this.app,
+      this.settings.defaultEnvironment,
+      (envName: string) => {
+        doc.replaceRange(`\n\\end{${envName}}`, to);
+        doc.replaceRange(`\\begin{${envName}}\n`, from);
+        doc.focus();
+        doc.setSelection({
+          line: from.line + 1,
+          ch: 0,
+        });
+      },
+    );
+    picker.open();
+  }
 }
 
 class LatexEnvironmentsSettingTab extends PluginSettingTab {
