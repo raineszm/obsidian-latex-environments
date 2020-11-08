@@ -41,6 +41,35 @@ describe('MathBlock', () => {
       });
     });
     describe('errors on unpaired begin or end', () => {
+      test('begin only for enclosing environment', () => {
+        const doc = fromString(
+          `$$\\begin{equation}|
+        \\begin{gathered}
+        x^2=2\\
+        y^2=3
+        \\end{gathered}$$`,
+        );
+        const block = new MathBlock(doc, doc.getCursor());
+        expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
+          'closed',
+        );
+      });
+
+      test('end only for enclosing environment', () => {
+        const doc = fromString(
+          `$$|
+        \\begin{gathered}
+        x^2=2\\
+        y^2=3
+        \\end{gathered}
+        \\end{equation}$$`,
+        );
+        const block = new MathBlock(doc, doc.getCursor());
+        expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
+          'closed',
+        );
+      });
+
       xtest('begin only for following environment', () => {
         const doc = fromString(
           `$$\\begin{equation}|
@@ -55,13 +84,14 @@ describe('MathBlock', () => {
         );
       });
 
-      test('begin only for enclosing environment', () => {
+      xtest('end only for preceeding environment', () => {
         const doc = fromString(
-          `$$\\begin{equation}|
-        \\begin{gathered}
+          `$$\\begin{equation}
         x^2=2\\
         y^2=3
-        \\end{gathered}$$`,
+        \\end{gathered}
+        |
+        \\end{equation}$$`,
         );
         const block = new MathBlock(doc, doc.getCursor());
         expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
