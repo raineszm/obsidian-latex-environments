@@ -7,7 +7,8 @@
     "dev": "rollup --config rollup.config.js -w",
     "build": "rollup --config rollup.config.js",
     "lint": "eslint . --ext .ts,.tsx",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "release": "standard-version"
   },
   "husky": {
     "hooks": {
