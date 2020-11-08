@@ -20,7 +20,9 @@ export class MathBlock {
     return this.doc.getSearchCursor(/\\(begin|end){\s*([^}]+)\s*}/m, start);
   }
 
-  private getEnclosingStart(cursor: CodeMirror.Position): Environment {
+  private getEnclosingStart(
+    cursor: CodeMirror.Position,
+  ): Environment | undefined {
     const enclosing = [];
     const envCursor = this.getEnvCursor(this.startPosition);
 
@@ -49,6 +51,9 @@ export class MathBlock {
           break;
         case 'end': {
           const current = enclosing.pop();
+          if (!current) {
+            throw new Error('closing environment which was never opened');
+          }
           if (current.name !== match[2]) {
             throw new Error('environment not closed properly');
           }
@@ -56,7 +61,7 @@ export class MathBlock {
       }
     }
 
-    return enclosing.last();
+    return enclosing.pop();
   }
 
   private getEnclosingEnd(name: string, cursor: CodeMirror.Position): Range {
@@ -86,11 +91,13 @@ export class MathBlock {
     throw new Error('current environment is never closed');
   }
 
-  public getEnclosingEnvironment(cursor: CodeMirror.Position): Environment {
+  public getEnclosingEnvironment(
+    cursor: CodeMirror.Position,
+  ): Environment | undefined {
     const env = this.getEnclosingStart(cursor);
 
     if (!env) {
-      return null;
+      return undefined;
     }
 
     env.end = this.getEnclosingEnd(env.name, cursor);
