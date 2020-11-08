@@ -1,4 +1,5 @@
 import * as CodeMirror from 'codemirror';
+import { Environment, PosRange } from './environment';
 
 export class MathBlock {
   readonly startPosition: CodeMirror.Position;
@@ -98,11 +99,12 @@ export class MathBlock {
     if (!env) {
       return undefined;
     }
-    return {
-      name: env.name,
-      start: env.start,
-      end: this.getEnclosingEnd(env.name, cursor),
-    };
+    return new Environment(
+      this.doc,
+      env.name,
+      env.start,
+      this.getEnclosingEnd(env.name, cursor),
+    );
   }
 
   public static isMathMode(
@@ -115,17 +117,7 @@ export class MathBlock {
   }
 }
 
-export type PosRange = {
-  from: CodeMirror.Position;
-  to: CodeMirror.Position;
-};
 interface EnvironmentStart {
   name: string;
   start: PosRange;
-}
-
-export interface Environment {
-  name: string;
-  start: PosRange;
-  end: PosRange;
 }

@@ -3,6 +3,7 @@ import { LatexEnvironmentsSettings } from './settings';
 import * as CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
+import { Environment } from './environment';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
@@ -61,12 +62,15 @@ export default class LatexEnvironments extends Plugin {
         doc.getCursor('to'),
       );
     }
-    this.promptName(this.settings.defaultEnvironment, (envName: string) => {
-      const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
-      doc.replaceRange(newEnvironment, cursor);
-      doc.setCursor({ line: cursor.line + 2, ch: 0 });
-      doc.focus();
-    });
+    this.withPromptName(
+      doc,
+      this.settings.defaultEnvironment,
+      (envName: string) => {
+        const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
+        doc.replaceRange(newEnvironment, cursor);
+        doc.setCursor({ line: cursor.line + 2, ch: 0 });
+      },
+    );
   };
 
   private changeEnvironment = (
@@ -74,25 +78,18 @@ export default class LatexEnvironments extends Plugin {
     doc: CodeMirror.Editor,
   ) => {
     const block = new MathBlock(doc, cursor);
-    const current = block.getEnclosingEnvironment(cursor);
-    let start = {
-      from: block.startPosition,
-      to: block.startPosition,
-    };
-    let end = { from: block.endPosition, to: block.endPosition };
-    if (current) {
-      start = current.start;
-      end = current.end;
-    }
-    this.promptName(
+    const current =
+      block.getEnclosingEnvironment(cursor) ||
+      new Environment(
+        doc,
+        this.settings.defaultEnvironment,
+        { from: block.startPosition, to: block.startPosition },
+        { from: block.endPosition, to: block.endPosition },
+      );
+    this.withPromptName(
+      doc,
       (current && current.name) || this.settings.defaultEnvironment,
-      (envName: string) => {
-        doc.operation(() => {
-          doc.replaceRange(`\\begin{${envName}}`, start.from, start.to);
-          doc.replaceRange(`\\end{${envName}}`, end.from, end.to);
-        });
-        doc.focus();
-      },
+      (envName: string) => current.replace(envName),
     );
   };
 
@@ -102,21 +99,29 @@ export default class LatexEnvironments extends Plugin {
     from: CodeMirror.Position,
     to: CodeMirror.Position,
   ) {
-    this.promptName(this.settings.defaultEnvironment, (envName: string) => {
-      doc.operation(() => {
+    this.withPromptName(
+      doc,
+      this.settings.defaultEnvironment,
+      (envName: string) => {
         doc.replaceRange(`\n\\end{${envName}}`, to);
         doc.replaceRange(`\\begin{${envName}}\n`, from);
         doc.setSelection({
           line: from.line + 1,
           ch: 0,
         });
-      });
-      doc.focus();
-    });
+      },
+    );
   }
 
-  private promptName(defaultName: string, callback: (envName: string) => void) {
-    new EnvModal(this.app, defaultName, callback).open();
+  private withPromptName(
+    doc: CodeMirror.Editor,
+    defaultName: string,
+    callback: (envName: string) => void,
+  ) {
+    new EnvModal(this.app, defaultName, (envName) => {
+      doc.operation(() => callback(envName));
+      doc.focus();
+    }).open();
   }
 }
 

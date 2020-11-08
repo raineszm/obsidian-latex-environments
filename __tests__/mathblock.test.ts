@@ -1,5 +1,6 @@
 import { fromString } from './codemirrorHelpers';
-import { Environment, MathBlock } from '../src/mathblock';
+import { MathBlock } from '../src/mathblock';
+import { Environment } from '../src/environment';
 
 describe('MathBlock', () => {
   describe('getEnclosingEnvironment', () => {
