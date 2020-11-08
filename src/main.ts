@@ -31,20 +31,20 @@ export default class LatexEnvironments extends Plugin {
   }
 
   private mathModeCallback(
-    callback: (cursor: CodeMirror.Position, editor: CodeMirror.Editor) => void,
+    callback: (cursor: CodeMirror.Position, doc: CodeMirror.Doc) => void,
   ) {
     return (checking: boolean) => {
       const leaf = this.app.workspace.activeLeaf;
       if (leaf && leaf.view instanceof MarkdownView) {
-        const doc = leaf.view.sourceMode.cmEditor;
-        const cursor = doc.getCursor();
+        const editor = leaf.view.sourceMode.cmEditor;
+        const cursor = editor.getCursor();
 
-        if (!MathBlock.isMathMode(cursor, doc)) {
+        if (!MathBlock.isMathMode(cursor, editor)) {
           return false;
         }
 
         if (!checking) {
-          callback(cursor, doc);
+          callback(cursor, editor);
         }
         return true;
       }
@@ -54,41 +54,41 @@ export default class LatexEnvironments extends Plugin {
 
   private insertEnvironment = (
     cursor: CodeMirror.Position,
-    editor: CodeMirror.Editor,
+    doc: CodeMirror.Doc,
   ) => {
-    if (editor.somethingSelected()) {
+    if (doc.somethingSelected()) {
       return this.wrapEnvironment(
-        editor,
-        editor.getCursor('from'),
-        editor.getCursor('to'),
+        doc,
+        doc.getCursor('from'),
+        doc.getCursor('to'),
       );
     }
     this.withPromptName(
-      editor,
+      doc.getEditor(),
       this.settings.defaultEnvironment,
       (envName: string) => {
         const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
-        editor.replaceRange(newEnvironment, cursor);
-        editor.setCursor({ line: cursor.line + 2, ch: 0 });
+        doc.replaceRange(newEnvironment, cursor);
+        doc.setCursor({ line: cursor.line + 2, ch: 0 });
       },
     );
   };
 
   private changeEnvironment = (
     cursor: CodeMirror.Position,
-    editor: CodeMirror.Editor,
+    doc: CodeMirror.Doc,
   ) => {
-    const block = new MathBlock(editor, cursor);
+    const block = new MathBlock(doc, cursor);
     const current =
       block.getEnclosingEnvironment(cursor) ||
       new Environment(
-        editor,
+        doc,
         this.settings.defaultEnvironment,
         { from: block.startPosition, to: block.startPosition },
         { from: block.endPosition, to: block.endPosition },
       );
     this.withPromptName(
-      editor,
+      doc.getEditor(),
       (current && current.name) || this.settings.defaultEnvironment,
       (envName: string) => current.replace(envName),
     );
@@ -96,17 +96,17 @@ export default class LatexEnvironments extends Plugin {
 
   // onUnload(): void {}
   private wrapEnvironment(
-    editor: CodeMirror.Editor,
+    doc: CodeMirror.Doc,
     from: CodeMirror.Position,
     to: CodeMirror.Position,
   ) {
     this.withPromptName(
-      editor,
+      doc.getEditor(),
       this.settings.defaultEnvironment,
       (envName: string) => {
-        editor.replaceRange(`\n\\end{${envName}}`, to);
-        editor.replaceRange(`\\begin{${envName}}\n`, from);
-        editor.setSelection({
+        doc.replaceRange(`\n\\end{${envName}}`, to);
+        doc.replaceRange(`\\begin{${envName}}\n`, from);
+        doc.setSelection({
           line: from.line + 1,
           ch: 0,
         });
@@ -115,13 +115,17 @@ export default class LatexEnvironments extends Plugin {
   }
 
   private withPromptName(
-    editor: CodeMirror.Editor,
+    editor: CodeMirror.Editor | null,
     defaultName: string,
     callback: (envName: string) => void,
   ) {
     new EnvModal(this.app, defaultName, (envName) => {
-      editor.operation(() => callback(envName));
-      editor.focus();
+      if (editor) {
+        editor.operation(() => callback(envName));
+        editor.focus();
+      } else {
+        callback(envName);
+      }
     }).open();
   }
 }
