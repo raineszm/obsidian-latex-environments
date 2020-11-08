@@ -15,6 +15,9 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
+  "standard-version": {
+    "tag-prefix": ""
+  },
   "keywords": [],
   "author": "",
   "license": "MIT",
