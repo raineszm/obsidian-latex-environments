@@ -3,9 +3,9 @@ import * as CodeMirror from 'codemirror';
 export class MathBlock {
   readonly startPosition: CodeMirror.Position;
   readonly endPosition: CodeMirror.Position;
-  public doc: CodeMirror.Editor;
+  public doc: CodeMirror.Doc;
 
-  constructor(doc: CodeMirror.Editor, cursor: CodeMirror.Position) {
+  constructor(doc: CodeMirror.Doc, cursor: CodeMirror.Position) {
     const searchCursor = doc.getSearchCursor('$$', cursor);
     this.startPosition = searchCursor.findPrevious()
       ? searchCursor.to()
