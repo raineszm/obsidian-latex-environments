@@ -17,7 +17,7 @@ export class EnvModal extends Modal {
       .addText((text) => {
         text.setValue(this.name).onChange((value) => (this.name = value));
         const textEl = text.inputEl;
-        textEl.addEventListener('keydown', (event) => {
+        textEl.addEventListener('keypress', (event) => {
           if (event.key == 'Enter') {
             this.submit();
           }
