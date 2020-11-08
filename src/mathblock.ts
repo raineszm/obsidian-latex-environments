@@ -109,9 +109,9 @@ export class MathBlock {
 
   public static isMathMode(
     cursor: CodeMirror.Position,
-    doc: CodeMirror.Editor,
+    editor: CodeMirror.Editor,
   ): boolean {
-    const token = doc.getTokenAt(cursor);
+    const token = editor.getTokenAt(cursor);
     const state = token.state;
     return state.hmdInnerStyle === 'math';
   }
