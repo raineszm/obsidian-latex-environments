@@ -79,7 +79,10 @@ export default class LatexEnvironments extends Plugin {
   ) => {
     const block = new MathBlock(doc, cursor);
     const current = block.getEnclosingEnvironment(cursor);
-    let start = { from: block.startPosition, to: block.startPosition };
+    let start = {
+      from: block.startPosition,
+      to: block.startPosition,
+    };
     let end = { from: block.endPosition, to: block.endPosition };
     if (current) {
       start = current.start;
@@ -87,7 +90,7 @@ export default class LatexEnvironments extends Plugin {
     }
     new EnvModal(
       this.app,
-      current.name || this.settings.defaultEnvironment,
+      (current && current.name) || this.settings.defaultEnvironment,
       (envName: string) => {
         doc.operation(() => {
           doc.replaceRange(`\\begin{${envName}}`, start.from, start.to);

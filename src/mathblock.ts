@@ -22,7 +22,7 @@ export class MathBlock {
 
   private getEnclosingStart(
     cursor: CodeMirror.Position,
-  ): Environment | undefined {
+  ): EnvironmentStart | undefined {
     const enclosing = [];
     const envCursor = this.getEnvCursor(this.startPosition);
 
@@ -46,7 +46,6 @@ export class MathBlock {
               from: envCursor.from(),
               to: envCursor.to(),
             },
-            end: null,
           });
           break;
         case 'end': {
@@ -64,7 +63,7 @@ export class MathBlock {
     return enclosing.pop();
   }
 
-  private getEnclosingEnd(name: string, cursor: CodeMirror.Position): Range {
+  private getEnclosingEnd(name: string, cursor: CodeMirror.Position): PosRange {
     const envCursor = this.getEnvCursor(cursor);
 
     let match;
@@ -99,9 +98,11 @@ export class MathBlock {
     if (!env) {
       return undefined;
     }
-
-    env.end = this.getEnclosingEnd(env.name, cursor);
-    return env;
+    return {
+      name: env.name,
+      start: env.start,
+      end: this.getEnclosingEnd(env.name, cursor),
+    };
   }
 
   public static isMathMode(
@@ -114,13 +115,17 @@ export class MathBlock {
   }
 }
 
-type Range = {
+export type PosRange = {
   from: CodeMirror.Position;
   to: CodeMirror.Position;
-} | null;
-
-interface Environment {
+};
+interface EnvironmentStart {
   name: string;
-  start: Range;
-  end: Range;
+  start: PosRange;
+}
+
+export interface Environment {
+  name: string;
+  start: PosRange;
+  end: PosRange;
 }
