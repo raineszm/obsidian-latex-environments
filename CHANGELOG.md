@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/raineszm/obsidian-latex-environments/compare/v0.0.4...v0.0.5) (2020-11-08)
+
+
+### Bug Fixes
+
+* ensure settings are always available ([1f86248](https://github.com/raineszm/obsidian-latex-environments/commit/1f862481097f0c54ed12790dd38c979565a97c1d))
+* handle undefineds in mathblock ([3287162](https://github.com/raineszm/obsidian-latex-environments/commit/32871622d261f4c90eea0957deb1a9903cdcd157))
+
 ### [0.0.4](https://github.com/raineszm/obsidian-latex-environments/compare/v0.0.3...v0.0.4) (2020-11-08)
 
 
