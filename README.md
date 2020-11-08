@@ -1,35 +1,48 @@
-## Obsidian Sample Plugin
+# obsidian-latex-environments
+![Version](https://img.shields.io/badge/version-0.0.3-blue.svg?cacheSeconds=2592000)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#license)
+> Quickly insert and change latex environments within math blocks in Obsidian.
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+## Installation
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+### Manual Installation
+To manually install 
+ 1. download the latest `zip`from the [latest Github Release](https://github.com/raineszm/obsidian-latex-environments/releases/latest)
+ 1. unzip the contents into the `.plugins/obisidian-latex-env` subdirectory of your vault.
+ 1. reload obsidian
+ 1. go into settings > third party plugins and activate obsidian-latex-environments
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
-### Releasing new releases
+## Usage
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments.
-- Publish the release.
+![](latexenv.gif)
 
-### Adding your plugin to the community plugin list
+###  Commands
 
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+This plugin currently provides 2 commands, which do not have default bindings.
+Both commands only work when the cursor is inside a math block.
+Both commands will also query for the name of the environment.
 
-### How to use
+#### Insert Environment
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
+Insert a new LaTeX environment at the cursor.
 
-### Manually installing the plugin
+**With a selection** inserts a new LaTeX environment around the selection.
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
 
-### API Documentation
+#### Change Environment
 
-See https://github.com/obsidianmd/obsidian-api
+Change the name of the surrounding LaTeX environment.
+
+*If the cursor is on a `\begin` or `\end`, it is the corresponding environment that will be changed.
+
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
+
