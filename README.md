@@ -1,5 +1,4 @@
 # obsidian-latex-environments
-![Version](https://img.shields.io/badge/version-0.0.4-blue.svg?cacheSeconds=2592000)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#license)
 > Quickly insert and change latex environments within math blocks in Obsidian.
 
