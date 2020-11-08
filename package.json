@@ -1,6 +1,6 @@
 {
   "name": "obsidian-latex-environments",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Quickly insert and change latex environments within math blocks in Obsidian.",
   "main": "main.js",
   "scripts": {
@@ -8,12 +8,15 @@
     "build": "rollup --config rollup.config.js",
     "lint": "eslint . --ext .ts,.tsx",
     "commit": "git-cz",
-    "release": "standard-version --tag-prefix=''"
+    "release": "standard-version"
   },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "standard-version": {
+    "tag-prefix": ""
   },
   "keywords": [],
   "author": "",
