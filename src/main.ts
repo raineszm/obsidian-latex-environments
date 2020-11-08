@@ -5,12 +5,13 @@ import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
 
 export default class LatexEnvironments extends Plugin {
-  public settings: LatexEnvironmentsSettings;
+  public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
 
-  onload(): void {
-    this.loadData().then((settings) => {
-      this.settings = settings || new LatexEnvironmentsSettings();
-    });
+  async onload(): Promise<void> {
+    const settings = await this.loadData();
+    if (settings) {
+      this.settings = settings;
+    }
 
     this.addCommand({
       id: 'insert-latex-env',
