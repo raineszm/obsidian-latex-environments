@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/raineszm/obsidian-latex-environments/compare/v0.0.3...v0.0.4) (2020-11-08)
+
+
+### Bug Fixes
+
+* change handler in modal to keypress ([a5b5a41](https://github.com/raineszm/obsidian-latex-environments/commit/a5b5a41f91f13da9ac7196add8cf2f7affcdb291)), closes [#2](https://github.com/raineszm/obsidian-latex-environments/issues/2)
+
 ### [0.0.3](https://github.com/raineszm/obsidian-latex-environments/compare/v0.0.2...v0.0.3) (2020-11-07)
 
 
