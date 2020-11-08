@@ -34,7 +34,7 @@ Insert a new LaTeX environment at the cursor.
 
 Change the name of the surrounding LaTeX environment.
 
-*If the cursor is on a `\begin` or `\end`, it is the corresponding environment that will be changed.
+*If the cursor is on a `\begin` or `\end`, it is the corresponding environment that will be changed.*
 
 
 ## Contributing
