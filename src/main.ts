@@ -61,16 +61,12 @@ export default class LatexEnvironments extends Plugin {
         doc.getCursor('to'),
       );
     }
-    new EnvModal(
-      this.app,
-      this.settings.defaultEnvironment,
-      (envName: string) => {
-        const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
-        doc.replaceRange(newEnvironment, cursor);
-        doc.setCursor({ line: cursor.line + 2, ch: 0 });
-        doc.focus();
-      },
-    ).open();
+    this.promptName(this.settings.defaultEnvironment, (envName: string) => {
+      const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
+      doc.replaceRange(newEnvironment, cursor);
+      doc.setCursor({ line: cursor.line + 2, ch: 0 });
+      doc.focus();
+    });
   };
 
   private changeEnvironment = (
@@ -88,8 +84,7 @@ export default class LatexEnvironments extends Plugin {
       start = current.start;
       end = current.end;
     }
-    new EnvModal(
-      this.app,
+    this.promptName(
       (current && current.name) || this.settings.defaultEnvironment,
       (envName: string) => {
         doc.operation(() => {
@@ -98,7 +93,7 @@ export default class LatexEnvironments extends Plugin {
         });
         doc.focus();
       },
-    ).open();
+    );
   };
 
   // onUnload(): void {}
@@ -107,21 +102,21 @@ export default class LatexEnvironments extends Plugin {
     from: CodeMirror.Position,
     to: CodeMirror.Position,
   ) {
-    new EnvModal(
-      this.app,
-      this.settings.defaultEnvironment,
-      (envName: string) => {
-        doc.operation(() => {
-          doc.replaceRange(`\n\\end{${envName}}`, to);
-          doc.replaceRange(`\\begin{${envName}}\n`, from);
-          doc.setSelection({
-            line: from.line + 1,
-            ch: 0,
-          });
+    this.promptName(this.settings.defaultEnvironment, (envName: string) => {
+      doc.operation(() => {
+        doc.replaceRange(`\n\\end{${envName}}`, to);
+        doc.replaceRange(`\\begin{${envName}}\n`, from);
+        doc.setSelection({
+          line: from.line + 1,
+          ch: 0,
         });
-        doc.focus();
-      },
-    ).open();
+      });
+      doc.focus();
+    });
+  }
+
+  private promptName(defaultName: string, callback: (envName: string) => void) {
+    new EnvModal(this.app, defaultName, callback).open();
   }
 }
 
