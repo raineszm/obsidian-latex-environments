@@ -1,9 +1,10 @@
-import { App, MarkdownView, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { MarkdownView, Plugin } from 'obsidian';
 import { LatexEnvironmentsSettings } from './settings';
 import * as CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
 import { Environment } from './environment';
+import { LatexEnvironmentsSettingTab } from './latexEnvironmentsSettingsTab';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
@@ -122,35 +123,5 @@ export default class LatexEnvironments extends Plugin {
       editor.operation(() => callback(envName));
       editor.focus();
     }).open();
-  }
-}
-
-class LatexEnvironmentsSettingTab extends PluginSettingTab {
-  private plugin: LatexEnvironments;
-
-  constructor(app: App, plugin: LatexEnvironments) {
-    super(app, plugin);
-    this.plugin = plugin;
-  }
-
-  display(): void {
-    const { containerEl } = this;
-
-    containerEl.empty();
-
-    containerEl.createEl('h2', { text: 'Settings for latex environments' });
-
-    new Setting(containerEl)
-      .setName('Default environment')
-      .setDesc('The default environment to insert')
-      .addText((text) =>
-        text
-          .setPlaceholder('environment')
-          .setValue(this.plugin.settings.defaultEnvironment)
-          .onChange(async (value) => {
-            this.plugin.settings.defaultEnvironment = value;
-            await this.plugin.saveData(this.plugin.settings);
-          }),
-      );
   }
 }
