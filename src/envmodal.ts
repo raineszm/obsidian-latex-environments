@@ -12,7 +12,9 @@ export class EnvModal extends Modal {
   }
 
   onOpen(): void {
-    const { contentEl } = this;
+    const { contentEl, containerEl } = this;
+    const title = containerEl.find('.modal-title');
+    title.innerText = 'Environment Name';
     new TextComponent(contentEl).then((textEl) => {
       textEl.setValue(this.name).onChange((name) => (this.name = name));
       const { inputEl } = textEl;
@@ -23,6 +25,18 @@ export class EnvModal extends Modal {
         }
       });
       inputEl.focus();
+    });
+    contentEl.createEl('div', { cls: 'prompt-instructions' }, (el) => {
+      el.createEl('div', { cls: 'prompt-instruction' }, (div) => {
+        div.createEl('span', { cls: 'prompt-instruction-command'}).innerText='↵';
+        div.createEl('span').innerText = 'to submit';
+      });
+      el.createEl('div', { cls: 'prompt-instruction' }, (div) => {
+        div.createEl('span', {
+          cls: 'prompt-instruction-command',
+        }).innerText = 'esc';
+        div.createEl('span').innerText = 'to cancel';
+      });
     });
   }
 
