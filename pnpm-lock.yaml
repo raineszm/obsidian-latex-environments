@@ -7,12 +7,12 @@ devDependencies:
   '@types/codemirror': 0.0.98
   '@types/jest': 26.0.15
   '@types/node': 14.14.6
-  '@typescript-eslint/eslint-plugin': 4.6.1_ef70842fa77cd1a4abb2a38c98d2a1a7
-  '@typescript-eslint/parser': 4.6.1_eslint@7.12.1+typescript@4.0.5
+  '@typescript-eslint/eslint-plugin': 4.6.1_22ab60e69a1f15a0eb2ba800dd6aa124
+  '@typescript-eslint/parser': 4.6.1_eslint@7.13.0+typescript@4.0.5
   codemirror: 5.58.2
   commitizen: 4.2.2
-  eslint: 7.12.1
-  eslint-config-prettier: 6.15.0_eslint@7.12.1
+  eslint: 7.13.0
+  eslint-config-prettier: 6.15.0_eslint@7.13.0
   husky: 4.3.0
   jest: 26.6.3
   obsidian: '@github.com/obsidianmd/obsidian-api/tarball/master'
@@ -925,13 +925,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-HmU8SeIRhZCWcnRskCs36Q1Q00KBV6Cqh/ora8WN1+22dY07AZdn6Gel8QZ3t26XYPImtcL8WV/eqjhVmMEw4g==
-  /@typescript-eslint/eslint-plugin/4.6.1_ef70842fa77cd1a4abb2a38c98d2a1a7:
+  /@typescript-eslint/eslint-plugin/4.6.1_22ab60e69a1f15a0eb2ba800dd6aa124:
     dependencies:
-      '@typescript-eslint/experimental-utils': 4.6.1_eslint@7.12.1+typescript@4.0.5
-      '@typescript-eslint/parser': 4.6.1_eslint@7.12.1+typescript@4.0.5
+      '@typescript-eslint/experimental-utils': 4.6.1_eslint@7.13.0+typescript@4.0.5
+      '@typescript-eslint/parser': 4.6.1_eslint@7.13.0+typescript@4.0.5
       '@typescript-eslint/scope-manager': 4.6.1
       debug: 4.2.0
-      eslint: 7.12.1
+      eslint: 7.13.0
       functional-red-black-tree: 1.0.1
       regexpp: 3.1.0
       semver: 7.3.2
@@ -949,13 +949,13 @@ packages:
         optional: true
     resolution:
       integrity: sha512-SNZyflefTMK2JyrPfFFzzoy2asLmZvZJ6+/L5cIqg4HfKGiW2Gr1Go1OyEVqne/U4QwmoasuMwppoBHWBWF2nA==
-  /@typescript-eslint/experimental-utils/4.6.1_eslint@7.12.1+typescript@4.0.5:
+  /@typescript-eslint/experimental-utils/4.6.1_eslint@7.13.0+typescript@4.0.5:
     dependencies:
       '@types/json-schema': 7.0.6
       '@typescript-eslint/scope-manager': 4.6.1
       '@typescript-eslint/types': 4.6.1
       '@typescript-eslint/typescript-estree': 4.6.1_typescript@4.0.5
-      eslint: 7.12.1
+      eslint: 7.13.0
       eslint-scope: 5.1.1
       eslint-utils: 2.1.0
     dev: true
@@ -966,13 +966,13 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-qyPqCFWlHZXkEBoV56UxHSoXW2qnTr4JrWVXOh3soBP3q0o7p4pUEMfInDwIa0dB/ypdtm7gLOS0hg0a73ijfg==
-  /@typescript-eslint/parser/4.6.1_eslint@7.12.1+typescript@4.0.5:
+  /@typescript-eslint/parser/4.6.1_eslint@7.13.0+typescript@4.0.5:
     dependencies:
       '@typescript-eslint/scope-manager': 4.6.1
       '@typescript-eslint/types': 4.6.1
       '@typescript-eslint/typescript-estree': 4.6.1_typescript@4.0.5
       debug: 4.2.0
-      eslint: 7.12.1
+      eslint: 7.13.0
       typescript: 4.0.5
     dev: true
     engines:
@@ -2235,9 +2235,9 @@ packages:
       source-map: 0.6.1
     resolution:
       integrity: sha512-qFcX0XJkdg+PB3xjZZG/wKSuT1PnQWx57+TVSjIMmILd2yC/6ByYElPwJnslDsuWuSAp4AwJGumarAAmJch5Kw==
-  /eslint-config-prettier/6.15.0_eslint@7.12.1:
+  /eslint-config-prettier/6.15.0_eslint@7.13.0:
     dependencies:
-      eslint: 7.12.1
+      eslint: 7.13.0
       get-stdin: 6.0.0
     dev: true
     hasBin: true
@@ -2274,7 +2274,7 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-QudtT6av5WXels9WjIM7qz1XD1cWGvX4gGXvp/zBn9nXG02D0utdU3Em2m/QjTnrsk6bBjmCygl3rmj118msQQ==
-  /eslint/7.12.1:
+  /eslint/7.13.0:
     dependencies:
       '@babel/code-frame': 7.10.4
       '@eslint/eslintrc': 0.2.1
@@ -2318,7 +2318,7 @@ packages:
       node: ^10.12.0 || >=12.0.0
     hasBin: true
     resolution:
-      integrity: sha512-HlMTEdr/LicJfN08LB3nM1rRYliDXOmfoO4vj39xN6BLpFzF00hbwBoqHk8UcJ2M/3nlARZWy/mslvGEuZFvsg==
+      integrity: sha512-uCORMuOO8tUzJmsdRtrvcGq5qposf7Rw0LwkTJkoDbOycVQtQjmnhZSuLQnozLE4TmAzlMVV45eCHmQ1OpDKUQ==
   /espree/7.3.0:
     dependencies:
       acorn: 7.4.1
@@ -4408,7 +4408,7 @@ packages:
       redent: 3.0.0
       trim-newlines: 3.0.0
       type-fest: 0.18.0
-      yargs-parser: 20.2.3
+      yargs-parser: 20.2.4
     dev: true
     engines:
       node: '>=10'
@@ -6177,7 +6177,7 @@ packages:
       mkdirp: 1.0.4
       semver: 7.3.2
       typescript: 4.0.5
-      yargs-parser: 20.2.3
+      yargs-parser: 20.2.4
     dev: true
     engines:
       node: '>= 10'
@@ -6562,12 +6562,12 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==
-  /yargs-parser/20.2.3:
+  /yargs-parser/20.2.4:
     dev: true
     engines:
       node: '>=10'
     resolution:
-      integrity: sha512-emOFRT9WVHw03QSvN5qor9QQT9+sw5vwxfYweivSMHTcAXPefwVae2FjO7JJjj8hCE4CzPOPeFM83VwT29HCww==
+      integrity: sha512-WOkpgNhPTlE73h4VFAFsOnomJVaovO8VqLDzy5saChRBFQFBoMYirowyW+Q9HB4HFF4Z7VZTiG3iSzJJA29yRA==
   /yargs/15.4.1:
     dependencies:
       cliui: 6.0.0
@@ -6599,23 +6599,23 @@ specifiers:
   '@commitlint/config-conventional': ^11.0.0
   '@rollup/plugin-commonjs': ^15.1.0
   '@rollup/plugin-node-resolve': ^9.0.0
-  '@rollup/plugin-typescript': ^6.0.0
+  '@rollup/plugin-typescript': ^6.1.0
   '@types/codemirror': ^0.0.98
   '@types/jest': ^26.0.15
-  '@types/node': ^14.14.2
+  '@types/node': ^14.14.6
   '@typescript-eslint/eslint-plugin': ^4.6.1
   '@typescript-eslint/parser': ^4.6.1
   codemirror: ^5.58.2
   commitizen: ^4.2.2
-  eslint: ^7.12.1
+  eslint: ^7.13.0
   eslint-config-prettier: ^6.15.0
   husky: ^4.3.0
   jest: ^26.6.3
   obsidian: 'https://github.com/obsidianmd/obsidian-api/tarball/master'
   prettier: ^2.1.2
-  rollup: ^2.32.1
+  rollup: ^2.33.1
   rollup-plugin-copy: ^3.3.0
   standard-version: ^9.0.0
   ts-jest: ^26.4.4
   tslib: ^2.0.3
-  typescript: ^4.0.3
+  typescript: ^4.0.5

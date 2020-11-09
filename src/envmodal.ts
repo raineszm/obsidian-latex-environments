@@ -1,4 +1,4 @@
-import { App, Modal, Setting } from 'obsidian';
+import { App, Modal, TextComponent } from 'obsidian';
 
 export class EnvModal extends Modal {
   private submitted = false;
@@ -13,27 +13,17 @@ export class EnvModal extends Modal {
 
   onOpen(): void {
     const { contentEl } = this;
-    contentEl.createEl('h2', { text: 'Environment?' });
-    new Setting(contentEl)
-      .setName('new name')
-      .addText((text) => {
-        text.setValue(this.name).onChange((value) => (this.name = value));
-        const textEl = text.inputEl;
-        textEl.addEventListener('keypress', (event) => {
-          if (event.key == 'Enter') {
-            this.submit();
-          }
-        });
-        textEl.focus();
-      })
-      .addButton((button) => {
-        button
-          .setButtonText('Go')
-          .setCta()
-          .onClick(() => {
-            this.submit();
-          });
+    new TextComponent(contentEl).then((textEl) => {
+      textEl.setValue(this.name).onChange((name) => (this.name = name));
+      const { inputEl } = textEl;
+      inputEl.className = 'prompt-input';
+      inputEl.addEventListener('keypress', (event) => {
+        if (event.key == 'Enter') {
+          this.submit();
+        }
       });
+      inputEl.focus();
+    });
   }
 
   private submit(): void {
