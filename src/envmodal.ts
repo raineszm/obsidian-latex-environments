@@ -25,10 +25,12 @@ export class EnvModal extends Modal {
         }
       });
       inputEl.focus();
+      inputEl.select();
     });
     contentEl.createEl('div', { cls: 'prompt-instructions' }, (el) => {
       el.createEl('div', { cls: 'prompt-instruction' }, (div) => {
-        div.createEl('span', { cls: 'prompt-instruction-command'}).innerText='↵';
+        div.createEl('span', { cls: 'prompt-instruction-command' }).innerText =
+          '↵';
         div.createEl('span').innerText = 'to submit';
       });
       el.createEl('div', { cls: 'prompt-instruction' }, (div) => {
