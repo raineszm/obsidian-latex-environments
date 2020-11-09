@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.0.5...0.1.0) (2020-11-09)
+
+
+### Features
+
+* automatically select text in popup modal ([5569155](https://github.com/raineszm/obsidian-latex-environments/commit/55691551b4a2f50878d55453e59bd3c239227e40))
+* **change:** error on mismatched environments ([048dfc6](https://github.com/raineszm/obsidian-latex-environments/commit/048dfc69774c05e2a7763298314fe543501d8e09)), closes [#4](https://github.com/raineszm/obsidian-latex-environments/issues/4)
+* **main:** display notice when command errors ([0e164a5](https://github.com/raineszm/obsidian-latex-environments/commit/0e164a512f8139015d392825b54a50f212ea59b8))
+* **modal:** prettify the environment selection modal ([dd7d111](https://github.com/raineszm/obsidian-latex-environments/commit/dd7d1112bafc35d69be22f3b1dfe3d4738c19e97))
+
+
+### Bug Fixes
+
+* correct formatting on inserted string ([ba2002b](https://github.com/raineszm/obsidian-latex-environments/commit/ba2002b74fd8599ebfd96e1d0974753ac6639432))
+* explicitly call getDoc when passing to inner methods ([1fc4915](https://github.com/raineszm/obsidian-latex-environments/commit/1fc49159b212704f375b63393385687e3c6e2ec1))
+
 ### [0.0.5](https://github.com/raineszm/obsidian-latex-environments/compare/v0.0.4...v0.0.5) (2020-11-08)
 
 
