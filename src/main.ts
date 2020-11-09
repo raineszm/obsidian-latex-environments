@@ -44,7 +44,7 @@ export default class LatexEnvironments extends Plugin {
         }
 
         if (!checking) {
-          callback(cursor, editor);
+          callback(cursor, editor.getDoc());
         }
         return true;
       }
