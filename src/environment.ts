@@ -51,7 +51,7 @@ export class Environment {
     return this;
   }
 
-  public print(contents = '\\n\\n'): string {
+  public print(contents = '\n\n'): string {
     return `${this.beginString}${contents}${this.endString}`;
   }
 
@@ -86,7 +86,7 @@ export class Environment {
       this.newRange(newLine, envName, 2, END_LENGTH),
     );
 
-    doc.replaceRange('\\n' + newEnvironment.print() + '\\n', cursor);
+    doc.replaceRange('\n' + newEnvironment.print() + '\n', cursor);
     doc.setCursor(nextLine(newLine));
     return newEnvironment;
   }
