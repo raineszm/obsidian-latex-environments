@@ -77,14 +77,10 @@ export default class LatexEnvironments extends Plugin {
     doc: CodeMirror.Doc,
   ) => {
     const block = new MathBlock(doc, cursor);
-    const current =
-      block.getEnclosingEnvironment(cursor) ||
-      new Environment(
-        doc,
-        this.settings.defaultEnvironment,
-        { from: block.startPosition, to: block.startPosition },
-        { from: block.endPosition, to: block.endPosition },
-      );
+    const current = block.getEnclosingEnvironment(cursor);
+    if (!current) {
+      return this.wrapEnvironment(doc, block.startPosition, block.endPosition);
+    }
     this.withPromptName(
       doc.getEditor(),
       (current && current.name) || this.settings.defaultEnvironment,
