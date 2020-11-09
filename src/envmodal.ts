@@ -1,10 +1,12 @@
 import { App, Modal, Setting } from 'obsidian';
 
 export class EnvModal extends Modal {
+  private submitted = false;
   constructor(
     app: App,
     private name: string,
-    private callback: (name: string) => void,
+    private resolve: (name: string) => void,
+    private reject: () => void,
   ) {
     super(app);
   }
@@ -35,12 +37,20 @@ export class EnvModal extends Modal {
   }
 
   private submit(): void {
-    this.callback(this.name);
+    this.submitted = true;
+    this.resolve(this.name);
     this.close();
   }
 
   onClose(): void {
     const { contentEl } = this;
     contentEl.empty();
+    if (!this.submitted) this.reject();
+  }
+
+  static promise(app: App, defaultName: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      new EnvModal(app, defaultName, resolve, reject).open();
+    });
   }
 }

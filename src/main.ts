@@ -119,13 +119,13 @@ export default class LatexEnvironments extends Plugin {
     defaultName: string,
     callback: (envName: string) => void,
   ) {
-    new EnvModal(this.app, defaultName, (envName) => {
+    EnvModal.promise(this.app, defaultName).then((envName) => {
       if (editor) {
         editor.operation(() => callback(envName));
         editor.focus();
       } else {
         callback(envName);
       }
-    }).open();
+    });
   }
 }
