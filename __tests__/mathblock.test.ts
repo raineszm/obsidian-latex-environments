@@ -75,11 +75,11 @@ describe('MathBlock', () => {
         );
         const block = new MathBlock(doc, doc.getCursor());
         expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
-          'closed',
+          'closing',
         );
       });
 
-      xtest('begin only for following environment', () => {
+      test('begin only for following environment', () => {
         const doc = fromString(
           [
             '$$\\begin{equation}|',
@@ -95,7 +95,7 @@ describe('MathBlock', () => {
         );
       });
 
-      xtest('end only for preceding environment', () => {
+      test('end only for preceding environment', () => {
         const doc = fromString(
           [
             '$$\\begin{equation}',
