@@ -8,5 +8,9 @@ export function fromString(template: string): CodeMirror.Doc {
     doc.setCursor(search.from());
     doc.replaceRange('', search.from(), search.to());
   }
+  if (search.findNext()) {
+    doc.setSelection(doc.getCursor(), search.from());
+    doc.replaceRange('', search.from(), search.to());
+  }
   return doc;
 }
