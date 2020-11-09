@@ -1,4 +1,4 @@
-import { MarkdownView, Plugin } from 'obsidian';
+import { MarkdownView, Notice, Plugin } from 'obsidian';
 import { LatexEnvironmentsSettings } from './settings';
 import * as CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
@@ -44,8 +44,12 @@ export default class LatexEnvironments extends Plugin {
         }
 
         if (!checking) {
-          const action = actionFactory(editor.getDoc()).prepare();
-          this.withPromptName(editor, action);
+          try {
+            const action = actionFactory(editor.getDoc()).prepare();
+            this.withPromptName(editor, action);
+          } catch (e) {
+            new Notice(e.message);
+          }
         }
         return true;
       }
