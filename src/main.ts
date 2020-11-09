@@ -3,8 +3,10 @@ import { LatexEnvironmentsSettings } from './settings';
 import * as CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
-import { Environment } from './environment';
 import { LatexEnvironmentsSettingTab } from './latexEnvironmentsSettingsTab';
+import { InsertAction } from './actions/insertAction';
+import { ChangeAction } from './actions/changeAction';
+import { Action } from './actions/action';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
@@ -18,21 +20,19 @@ export default class LatexEnvironments extends Plugin {
     this.addCommand({
       id: 'insert-latex-env',
       name: 'Insert LaTeX environment',
-      checkCallback: this.mathModeCallback(this.insertEnvironment),
+      checkCallback: this.mathModeCallback((doc) => new InsertAction(doc)),
     });
 
     this.addCommand({
       id: 'change-latex-env',
       name: 'Change LaTeX environment',
-      checkCallback: this.mathModeCallback(this.changeEnvironment),
+      checkCallback: this.mathModeCallback((doc) => new ChangeAction(doc)),
     });
 
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
-  private mathModeCallback(
-    callback: (cursor: CodeMirror.Position, doc: CodeMirror.Doc) => void,
-  ) {
+  private mathModeCallback(actionFactory: (doc: CodeMirror.Doc) => Action) {
     return (checking: boolean) => {
       const leaf = this.app.workspace.activeLeaf;
       if (leaf && leaf.view instanceof MarkdownView) {
@@ -44,7 +44,8 @@ export default class LatexEnvironments extends Plugin {
         }
 
         if (!checking) {
-          callback(cursor, editor.getDoc());
+          const action = actionFactory(editor.getDoc()).prepare();
+          this.withPromptName(editor, action);
         }
         return true;
       }
@@ -52,69 +53,13 @@ export default class LatexEnvironments extends Plugin {
     };
   }
 
-  private insertEnvironment = (
-    cursor: CodeMirror.Position,
-    doc: CodeMirror.Doc,
-  ) => {
-    if (doc.somethingSelected()) {
-      return this.wrapEnvironment(
-        doc,
-        doc.getCursor('from'),
-        doc.getCursor('to'),
-      );
-    }
-    this.withPromptName(
-      doc.getEditor(),
-      this.settings.defaultEnvironment,
-      (envName: string) => {
-        Environment.create(envName, doc, cursor);
-      },
-    );
-  };
-
-  private changeEnvironment = (
-    cursor: CodeMirror.Position,
-    doc: CodeMirror.Doc,
-  ) => {
-    const block = new MathBlock(doc, cursor);
-    const current = block.getEnclosingEnvironment(cursor);
-    if (!current) {
-      return this.wrapEnvironment(doc, block.startPosition, block.endPosition);
-    }
-    this.withPromptName(
-      doc.getEditor(),
-      (current && current.name) || this.settings.defaultEnvironment,
-      (envName: string) => current.replace(envName),
-    );
-  };
-
-  // onUnload(): void {}
-  private wrapEnvironment(
-    doc: CodeMirror.Doc,
-    from: CodeMirror.Position,
-    to: CodeMirror.Position,
-  ) {
-    this.withPromptName(
-      doc.getEditor(),
-      this.settings.defaultEnvironment,
-      (envName: string) => {
-        Environment.wrap(envName, doc, from, to);
-      },
-    );
-  }
-
-  private withPromptName(
-    editor: CodeMirror.Editor | null,
-    defaultName: string,
-    callback: (envName: string) => void,
-  ) {
-    EnvModal.promise(this.app, defaultName).then((envName) => {
-      if (editor) {
-        editor.operation(() => callback(envName));
-        editor.focus();
-      } else {
-        callback(envName);
-      }
+  private withPromptName(editor: CodeMirror.Editor, action: Action) {
+    EnvModal.promise(
+      this.app,
+      action.suggestName() || this.settings.defaultEnvironment,
+    ).then((envName) => {
+      editor.operation(() => action.execute(envName));
+      editor.focus();
     });
   }
 }
