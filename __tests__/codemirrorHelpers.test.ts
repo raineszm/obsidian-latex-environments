@@ -13,16 +13,18 @@ describe('CodeMirror helpers', () => {
       expect(doc.getValue()).toBe('$$');
     });
     it('sets the document text', () => {
-      const template = `# Header
-      
-      This is some text with inline math $x$.
-      
-      The cursor is |here. And then we have a mathblock
-      $$\\begin{equation}
-      x^2 + 2 = 4
-      \\end{equation}$$`;
-      const doc = fromString(template);
-      const expected = template.replace('|', '');
+      const input = [
+        '# Header',
+        '',
+        'This is some text with inline math $x$.',
+        '',
+        'The cursor is |here. And then we have a mathblock',
+        '$$\\begin{equation}',
+        'x^2 + 2 = 4',
+        '\\end{equation}$$',
+      ].join('\n');
+      const doc = fromString(input);
+      const expected = input.replace('|', '');
       expect(doc.getValue()).toBe(expected);
     });
 

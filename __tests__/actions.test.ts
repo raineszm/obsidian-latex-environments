@@ -5,7 +5,13 @@ import { ChangeAction } from '../src/actions/changeAction';
 describe('InsertAction', () => {
   it('adds environment at point', () => {
     const input = '$$|$$';
-    const expected = '$$\n\\begin{equation}\n\n\\end{equation}\n$$';
+    const expected = [
+      '$$',
+      '\\begin{equation}',
+      '',
+      '\\end{equation}',
+      '$$',
+    ].join('\n');
 
     const doc = fromString(input);
 
@@ -17,8 +23,10 @@ describe('InsertAction', () => {
 });
 describe('ChangeAction', () => {
   it('changes the name of surrounding environment', () => {
-    const input = '$$\\begin{equation}\n|\n\\end{equation}$$';
-    const expected = '$$\\begin{multline}\n\n\\end{multline}$$';
+    const input = ['$$\\begin{equation}', '|', '\\end{equation}$$'].join('\n');
+    const expected = ['$$\\begin{multline}', '', '\\end{multline}$$'].join(
+      '\n',
+    );
 
     const doc = fromString(input);
 
