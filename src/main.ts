@@ -67,9 +67,7 @@ export default class LatexEnvironments extends Plugin {
       doc.getEditor(),
       this.settings.defaultEnvironment,
       (envName: string) => {
-        const newEnvironment = `\n\\begin{${envName}}\n\n\\end{${envName}}\n`;
-        doc.replaceRange(newEnvironment, cursor);
-        doc.setCursor({ line: cursor.line + 2, ch: 0 });
+        Environment.create(envName, doc, cursor);
       },
     );
   };
