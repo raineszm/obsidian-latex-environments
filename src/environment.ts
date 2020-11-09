@@ -90,11 +90,31 @@ export class Environment {
     doc.setCursor(nextLine(newLine));
     return newEnvironment;
   }
+
+  public static wrap(
+    envName: string,
+    doc: CodeMirror.Doc,
+    from: CodeMirror.Position,
+    to: CodeMirror.Position,
+  ): Environment {
+    const newEnvironment = new Environment(
+      doc,
+      envName,
+      this.newRange(from, envName, 0, BEGIN_LENGTH),
+      this.newRange(nextLine(to, true, 2), envName, 2, END_LENGTH),
+    );
+    doc.replaceRange('\n' + newEnvironment.endString, to);
+    doc.replaceRange(newEnvironment.beginString + '\n', from);
+    doc.setSelection(nextLine(to, true));
+
+    return newEnvironment;
+  }
 }
 
 function nextLine(
   cursor: CodeMirror.Position,
   cr = false,
+  offset = 1,
 ): CodeMirror.Position {
-  return { line: cursor.line + 1, ch: cr ? 0 : cursor.ch };
+  return { line: cursor.line + offset, ch: cr ? 0 : cursor.ch };
 }

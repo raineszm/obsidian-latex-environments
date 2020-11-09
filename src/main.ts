@@ -102,12 +102,7 @@ export default class LatexEnvironments extends Plugin {
       doc.getEditor(),
       this.settings.defaultEnvironment,
       (envName: string) => {
-        doc.replaceRange(`\n\\end{${envName}}`, to);
-        doc.replaceRange(`\\begin{${envName}}\n`, from);
-        doc.setSelection({
-          line: from.line + 1,
-          ch: 0,
-        });
+        Environment.wrap(envName, doc, from, to);
       },
     );
   }
