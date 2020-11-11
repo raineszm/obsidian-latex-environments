@@ -10,6 +10,19 @@
 
 ## Installation
 
+If you have Obsidian version 0.9.8 or greater:
+
+1. Open the options pane
+1. Go to `Third-party plugins`
+1. Ensure that `safe-mode` is *off*. (**WARNING: Please verify for yourself the safety of any plugins before using them.**)
+1. Click `Browse` next to Community Plugins
+1. Search for `Latex Environments`
+1. Click `Install`
+1. Go back to the `Third-party plugins` page and enable `Latex Environments`
+
+To update simply go back to the `Third-Party plugins` page for `Latex Environments` and click `Update`.
+
+
 ### Manual Installation
 To manually install 
  1. download the latest `zip`from the [latest Github Release](https://github.com/raineszm/obsidian-latex-environments/releases/latest)
