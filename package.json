@@ -16,7 +16,15 @@
     }
   },
   "standard-version": {
-    "tag-prefix": ""
+    "tag-prefix": "",
+    "bumpFiles": [
+      "package.json",
+      "manifest.json",
+      {
+        "filename": "versions.json",
+        "updater": ".standard-version/standard-version-versions-updater.js"
+      }
+    ]
   },
   "keywords": [],
   "author": "",
