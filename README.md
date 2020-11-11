@@ -1,9 +1,8 @@
 # obsidian-latex-environments
 [![](https://img.shields.io/github/v/release/raineszm/obsidian-latex-environments?style=for-the-badge)](https://github.com/raineszm/obsidian-latex-environments/releases/latest)
 ![](https://img.shields.io/github/commits-since/raineszm/obsidian-latex-environments/latest?style=for-the-badge)
-
 ![](https://img.shields.io/github/manifest-json/minAppVersion/raineszm/obsidian-latex-environments?color=red&label=Min%20Obsidian%20Version&style=for-the-badge)
-
+![](https://img.shields.io/github/downloads/raineszm/obsidian-latex-environments/total?style=for-the-badge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](#license)
 
 > Quickly insert and change latex environments within math blocks in Obsidian.
