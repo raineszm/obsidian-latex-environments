@@ -96,6 +96,7 @@ export class Environment {
     doc: CodeMirror.Doc,
     from: CodeMirror.Position,
     to: CodeMirror.Position,
+    outerPad = '\n',
   ): Environment {
     const newEnvironment = new Environment(
       doc,
@@ -103,8 +104,8 @@ export class Environment {
       this.newRange(from, envName, 0, BEGIN_LENGTH),
       this.newRange(nextLine(to, true, 2), envName, 2, END_LENGTH),
     );
-    doc.replaceRange('\n' + newEnvironment.endString, to);
-    doc.replaceRange(newEnvironment.beginString + '\n', from);
+    doc.replaceRange(outerPad + newEnvironment.endString, to);
+    doc.replaceRange(newEnvironment.beginString + outerPad, from);
     doc.setSelection(nextLine(to, true));
 
     return newEnvironment;

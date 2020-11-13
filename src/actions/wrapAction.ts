@@ -7,6 +7,7 @@ export class WrapAction extends Action {
     doc: CodeMirror.Doc,
     public readonly from: CodeMirror.Position,
     public readonly to: CodeMirror.Position,
+    public readonly addWhitespace = true,
   ) {
     super(doc);
   }
@@ -16,6 +17,12 @@ export class WrapAction extends Action {
   }
 
   execute(envName: string): void {
-    Environment.wrap(envName, this.doc, this.from, this.to);
+    Environment.wrap(
+      envName,
+      this.doc,
+      this.from,
+      this.to,
+      this.addWhitespace ? '\n' : '',
+    );
   }
 }

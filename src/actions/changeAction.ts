@@ -16,7 +16,12 @@ export class ChangeAction extends Action {
     const block = new MathBlock(this.doc, cursor);
     this.current = block.getEnclosingEnvironment(cursor);
     if (!this.current) {
-      return new WrapAction(this.doc, block.startPosition, block.endPosition);
+      return new WrapAction(
+        this.doc,
+        block.startPosition,
+        block.endPosition,
+        false,
+      );
     }
     this.name = this.current.name;
     return this;

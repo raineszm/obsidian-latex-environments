@@ -66,4 +66,20 @@ describe('ChangeAction', () => {
 
     expect(doc.getValue()).toBe(expected);
   });
+
+  it("doesn't add whitespace when no enclosing environment", () => {
+    const input = ['$$', '|x^2 + 1', '$$'].join('\n');
+    const expected = [
+      '$$\\begin{equation}',
+      'x^2 + 1',
+      '\\end{equation}$$',
+    ].join('\n');
+
+    const doc = fromString(input);
+
+    const action = new ChangeAction(doc).prepare();
+    action.execute('equation');
+
+    expect(doc.getValue()).toBe(expected);
+  });
 });
