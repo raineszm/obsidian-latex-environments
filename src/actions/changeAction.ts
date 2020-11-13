@@ -20,7 +20,7 @@ export class ChangeAction extends Action {
         this.doc,
         block.startPosition,
         block.endPosition,
-        false,
+        block.startPosition.line == block.endPosition.line,
       );
     }
     this.name = this.current.name;
