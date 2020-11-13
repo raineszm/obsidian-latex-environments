@@ -106,7 +106,7 @@ export class Environment {
     );
     doc.replaceRange(outerPad + newEnvironment.endString, to);
     doc.replaceRange(newEnvironment.beginString + outerPad, from);
-    doc.setSelection(nextLine(to, true));
+    doc.setSelection(nextLine(from, true));
 
     return newEnvironment;
   }
