@@ -7,6 +7,7 @@ import { LatexEnvironmentsSettingTab } from './latexEnvironmentsSettingsTab';
 import { InsertAction } from './actions/insertAction';
 import { ChangeAction } from './actions/changeAction';
 import { Action } from './actions/action';
+import { DeleteAction } from './actions/deleteAction';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
@@ -32,7 +33,7 @@ export default class LatexEnvironments extends Plugin {
     this.addCommand({
       id: 'delete-latex-env',
       name: 'Delete LaTeX environment',
-      checkCallback: this.mathModeCallback((doc) => new ChangeAction(doc)),
+      checkCallback: this.mathModeCallback((doc) => new DeleteAction(doc)),
     });
 
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
@@ -75,7 +76,7 @@ export default class LatexEnvironments extends Plugin {
         action.suggestName() || this.settings.defaultEnvironment,
       ).then(call);
     } else {
-      action.execute('*');
+      call('*');
     }
   }
 }
