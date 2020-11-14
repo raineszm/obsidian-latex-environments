@@ -54,6 +54,10 @@ Change the name of the surrounding LaTeX environment.
 
 *If the cursor is on a `\begin` or `\end`, it is the corresponding environment that will be changed.*
 
+### Delete Environment
+
+Remove the innermost LaTeX environment enclosing the cursor.
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
