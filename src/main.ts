@@ -29,6 +29,12 @@ export default class LatexEnvironments extends Plugin {
       checkCallback: this.mathModeCallback((doc) => new ChangeAction(doc)),
     });
 
+    this.addCommand({
+      id: 'delete-latex-env',
+      name: 'Delete LaTeX environment',
+      checkCallback: this.mathModeCallback((doc) => new ChangeAction(doc)),
+    });
+
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
@@ -58,12 +64,18 @@ export default class LatexEnvironments extends Plugin {
   }
 
   private withPromptName(editor: CodeMirror.Editor, action: Action) {
-    EnvModal.promise(
-      this.app,
-      action.suggestName() || this.settings.defaultEnvironment,
-    ).then((envName) => {
+    const call = (envName: string) => {
       editor.operation(() => action.execute(envName));
       editor.focus();
-    });
+    };
+
+    if (action.needsName) {
+      EnvModal.promise(
+        this.app,
+        action.suggestName() || this.settings.defaultEnvironment,
+      ).then(call);
+    } else {
+      action.execute('*');
+    }
   }
 }

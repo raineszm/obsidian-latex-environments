@@ -7,4 +7,7 @@ export abstract class Action {
   public suggestName(): string | undefined {
     return undefined;
   }
+  public get needsName(): boolean {
+    return true;
+  }
 }

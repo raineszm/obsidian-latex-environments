@@ -85,14 +85,11 @@ describe('ChangeAction', () => {
   });
 });
 
-
 describe('DeleteAction', () => {
   it('removes the begin and end of surrounding environment', () => {
-    const input = [
-      '$$\\begin{equation}',
-      '|x^2 + 1',
-      '\\end{equation}$$',
-    ].join('\n');
+    const input = ['$$\\begin{equation}', '|x^2 + 1', '\\end{equation}$$'].join(
+      '\n',
+    );
 
     const expected = ['$$', 'x^2 + 1', '$$'].join('\n');
 
@@ -115,13 +112,56 @@ describe('DeleteAction', () => {
 
     expect(doc.getValue()).toBe(expected);
   });
-  it.skip('it leaves adjacent environments untouched', () => {
+  it('it leaves adjacent environments untouched', () => {
+    const input = [
+      '$$\\begin{gather}',
+      'x^2|=2\\\\',
+      '\\begin{pmatrix}',
+      '1&2\\\\',
+      '3&4',
+      '\\end{pmatrix}',
+      '\\end{gather}$$',
+    ].join('\n');
+    const expected = [
+      '$$',
+      'x^2=2\\\\',
+      '\\begin{pmatrix}',
+      '1&2\\\\',
+      '3&4',
+      '\\end{pmatrix}',
+      '$$',
+    ].join('\n');
 
-    // const doc = fromString(input);
+    const doc = fromString(input);
 
-    // const action = new DeleteAction(doc).prepare();
-    // action.execute('*');
+    const action = new DeleteAction(doc).prepare();
+    action.execute('*');
 
-    // expect(doc.getValue()).toBe(expected);
+    expect(doc.getValue()).toBe(expected);
+  });
+  it('only deletes nearest enclosing environment', () => {
+    const input = [
+      '$$\\begin{equation}',
+      '\\begin{gathered}',
+      'x^2|=2\\\\',
+      'y^2=3',
+      '\\end{gathered}',
+      '\\end{equation}$$',
+    ].join('\n');
+    const expected = [
+      '$$\\begin{equation}',
+      '',
+      'x^2=2\\\\',
+      'y^2=3',
+      '',
+      '\\end{equation}$$',
+    ].join('\n');
+
+    const doc = fromString(input);
+
+    const action = new DeleteAction(doc).prepare();
+    action.execute('*');
+
+    expect(doc.getValue()).toBe(expected);
   });
 });
