@@ -1,6 +1,6 @@
 {
   "name": "obsidian-latex-environments",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Quickly insert and change latex environments within math blocks in Obsidian.",
   "main": "main.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
     "commit": "git-cz",
-    "release": "standard-version"
+    "release": "standard-version",
+    "release:dryrun": "standard-version --dry-run"
   },
   "husky": {
     "hooks": {

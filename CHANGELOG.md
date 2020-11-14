@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.0...0.1.1) (2020-11-14)
+
+
+### Features
+
+* don't add whitespace when changing without enclosing environment ([de5315a](https://github.com/raineszm/obsidian-latex-environments/commit/de5315a9a69f345505f3b22902da3ef5ad74c5d0)), closes [#5](https://github.com/raineszm/obsidian-latex-environments/issues/5)
+
+
+### Bug Fixes
+
+* fix handling of environments occurring after the cursor ([7c39dbf](https://github.com/raineszm/obsidian-latex-environments/commit/7c39dbfb29cb13bfd69de0589b04a16773ca381a)), closes [#9](https://github.com/raineszm/obsidian-latex-environments/issues/9)
+* **environment:** fix cursor position after changing a math block without an environment ([289df5b](https://github.com/raineszm/obsidian-latex-environments/commit/289df5bd41a7722e9750ce0f6bf4e6782a6e73c8))
+* add whitespace when changing environment if only one line ([7260b75](https://github.com/raineszm/obsidian-latex-environments/commit/7260b75d18a2fb2bdaeb7f6fbed96c5790e6a3c8))
+* **shields:** point minappversion shield to manifest.json instead of package.json ([85884b5](https://github.com/raineszm/obsidian-latex-environments/commit/85884b501cf3755686fffa3eb0af842bcf96db57))
+
 ## [0.1.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.0.5...0.1.0) (2020-11-09)
 
 

@@ -45,16 +45,27 @@ export class MathBlock {
       return undefined;
     }
 
-    const end = environments
-      .filter((env) => {
-        const to = env.pos.to;
-        return (
-          env.type === 'end' &&
-          (to.line > cursor.line ||
-            (to.line == cursor.line && to.ch > cursor.ch))
-        );
-      })
-      .shift();
+    const after = environments.filter((env) => {
+      const from = env.pos.from;
+      return (
+        from.line > cursor.line ||
+        (from.line == cursor.line && from.ch > cursor.ch)
+      );
+    });
+
+    let open = 1;
+    let end: BeginEnd | undefined = undefined;
+    for (const env of after) {
+      if (env.type == 'begin') {
+        open++;
+      } else {
+        open--;
+        if (!open) {
+          end = env;
+          break;
+        }
+      }
+    }
 
     if (!end) {
       throw new Error('current environment is never closed');
