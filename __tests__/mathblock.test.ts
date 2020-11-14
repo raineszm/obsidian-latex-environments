@@ -45,6 +45,27 @@ describe('MathBlock', () => {
         expect((env as Environment).name).toBe('equation');
       });
     });
+    describe('returns matching begin and end', () => {
+      const doc = fromString(
+        [
+          '$$\\begin{equation}|',
+          '\\begin{gathered}',
+          'x^2=2\\\\',
+          'y^2=3',
+          '\\end{gathered}',
+          '\\end{equation}$$',
+        ].join('\n'),
+      );
+      const block = new MathBlock(doc, doc.getCursor());
+      const env = block.getEnclosingEnvironment(doc.getCursor());
+      expect(env).toBeTruthy();
+      if (env) {
+        expect(doc.getRange(env.start.from, env.start.to)).toBe(
+          '\\begin{equation}',
+        );
+        expect(doc.getRange(env.end.from, env.end.to)).toBe('\\end{equation}');
+      }
+    });
     describe('errors on unpaired begin or end', () => {
       test('begin only for enclosing environment', () => {
         const doc = fromString(
