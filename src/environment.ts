@@ -110,6 +110,11 @@ export class Environment {
 
     return newEnvironment;
   }
+
+  public unwrap(): void {
+    this.doc.replaceRange('', this.start.from, this.start.to);
+    this.doc.replaceRange('', this.end.from, this.end.to);
+  }
 }
 
 function nextLine(

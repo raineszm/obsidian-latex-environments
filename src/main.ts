@@ -7,6 +7,7 @@ import { LatexEnvironmentsSettingTab } from './latexEnvironmentsSettingsTab';
 import { InsertAction } from './actions/insertAction';
 import { ChangeAction } from './actions/changeAction';
 import { Action } from './actions/action';
+import { DeleteAction } from './actions/deleteAction';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
@@ -27,6 +28,12 @@ export default class LatexEnvironments extends Plugin {
       id: 'change-latex-env',
       name: 'Change LaTeX environment',
       checkCallback: this.mathModeCallback((doc) => new ChangeAction(doc)),
+    });
+
+    this.addCommand({
+      id: 'delete-latex-env',
+      name: 'Delete LaTeX environment',
+      checkCallback: this.mathModeCallback((doc) => new DeleteAction(doc)),
     });
 
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
@@ -58,12 +65,18 @@ export default class LatexEnvironments extends Plugin {
   }
 
   private withPromptName(editor: CodeMirror.Editor, action: Action) {
-    EnvModal.promise(
-      this.app,
-      action.suggestName() || this.settings.defaultEnvironment,
-    ).then((envName) => {
+    const call = (envName: string) => {
       editor.operation(() => action.execute(envName));
       editor.focus();
-    });
+    };
+
+    if (action.needsName) {
+      EnvModal.promise(
+        this.app,
+        action.suggestName() || this.settings.defaultEnvironment,
+      ).then(call);
+    } else {
+      call('*');
+    }
   }
 }
