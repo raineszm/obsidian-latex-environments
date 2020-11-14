@@ -10,7 +10,8 @@
     "test": "jest --coverage",
     "commit": "git-cz",
     "release": "standard-version",
-    "release:dryrun": "standard-version --dry-run"
+    "release:dryrun": "standard-version --dry-run",
+    "release:prerelease": "standard-version --skip.tag --skip.changelog --prerelease"
   },
   "husky": {
     "hooks": {
