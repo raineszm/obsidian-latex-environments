@@ -11,3 +11,6 @@ main.js
 *.js.map
 dist/*
 deploy.sh
+
+# test
+coverage/*
