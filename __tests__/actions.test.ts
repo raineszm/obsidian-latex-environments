@@ -2,6 +2,22 @@ import { fromString } from './codemirrorHelpers';
 import { InsertAction } from '../src/actions/insertAction';
 import { ChangeAction } from '../src/actions/changeAction';
 import { DeleteAction } from '../src/actions/deleteAction';
+import { Action } from '../src/actions/action';
+import CodeMirror from 'codemirror';
+
+function testAction(
+  input: string,
+  expected: string,
+  actionFactory: (doc: CodeMirror.Doc) => Action,
+  envName = 'equation',
+) {
+  const doc = fromString(input);
+
+  const action = actionFactory(doc).prepare();
+  action.execute(envName);
+
+  expect(doc.getValue()).toBe(expected);
+}
 
 describe('InsertAction', () => {
   it('adds environment at point', () => {
@@ -13,13 +29,7 @@ describe('InsertAction', () => {
       '\\end{equation}',
       '$$',
     ].join('\n');
-
-    const doc = fromString(input);
-
-    const action = new InsertAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new InsertAction(doc));
   });
   it('wraps the selection with an environment', () => {
     const input = '$$|x^2 + 1|$$';
@@ -29,12 +39,7 @@ describe('InsertAction', () => {
       '\\end{equation}$$',
     ].join('\n');
 
-    const doc = fromString(input);
-
-    const action = new InsertAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new InsertAction(doc));
   });
 
   it('adds newlines to separate from adjacent content', () => {
@@ -48,12 +53,7 @@ describe('InsertAction', () => {
       '- 2',
       '$$',
     ].join('\n');
-    const doc = fromString(input);
-
-    const action = new InsertAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new InsertAction(doc));
   });
   it("doesn't add a newline after when all white space after the curosr", () => {
     const input = ['$$', 'x^2 + 1|', '$$'].join('\n');
@@ -64,12 +64,7 @@ describe('InsertAction', () => {
       '',
       '\\end{equation}$$',
     ].join('\n');
-    const doc = fromString(input);
-
-    const action = new InsertAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new InsertAction(doc));
   });
   it("doesn't add a newline before when all white space before the curosr", () => {
     const input = ['$$', 'x^2 + 1|', '$$'].join('\n');
@@ -81,24 +76,14 @@ describe('InsertAction', () => {
       'x^2 + 1',
       '$$',
     ].join('\n');
-    const doc = fromString(input);
-
-    const action = new InsertAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new InsertAction(doc));
   });
   it("doesn't add newlines if insert line is blank", () => {
     const input = ['$$', '|', '$$'].join('\n');
     const expected = ['$$\\begin{equation}', '', '\\end{equation}$$'].join(
       '\n',
     );
-    const doc = fromString(input);
-
-    const action = new InsertAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new InsertAction(doc));
   });
 });
 describe('ChangeAction', () => {
@@ -107,13 +92,7 @@ describe('ChangeAction', () => {
     const expected = ['$$\\begin{multline}', '', '\\end{multline}$$'].join(
       '\n',
     );
-
-    const doc = fromString(input);
-
-    const action = new ChangeAction(doc).prepare();
-    action.execute('multline');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new ChangeAction(doc), 'multline');
   });
 
   it('when no surrounding environment wraps the whole block', () => {
@@ -124,12 +103,7 @@ describe('ChangeAction', () => {
       '\\end{equation}$$',
     ].join('\n');
 
-    const doc = fromString(input);
-
-    const action = new ChangeAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new ChangeAction(doc));
   });
 
   it("doesn't add whitespace when no enclosing environment", () => {
@@ -140,12 +114,7 @@ describe('ChangeAction', () => {
       '\\end{equation}$$',
     ].join('\n');
 
-    const doc = fromString(input);
-
-    const action = new ChangeAction(doc).prepare();
-    action.execute('equation');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new ChangeAction(doc));
   });
 });
 
@@ -156,25 +125,14 @@ describe('DeleteAction', () => {
     );
 
     const expected = ['$$', 'x^2 + 1', '$$'].join('\n');
-
-    const doc = fromString(input);
-
-    const action = new DeleteAction(doc).prepare();
-    action.execute('*');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new DeleteAction(doc));
   });
 
   it('it is a noop for no surrounding environments', () => {
     const input = ['$$', '|x^2 + 1', '$$'].join('\n');
     const expected = input.replace('|', '');
 
-    const doc = fromString(input);
-
-    const action = new DeleteAction(doc).prepare();
-    action.execute('*');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new DeleteAction(doc));
   });
   it('it leaves adjacent environments untouched', () => {
     const input = [
@@ -196,12 +154,7 @@ describe('DeleteAction', () => {
       '$$',
     ].join('\n');
 
-    const doc = fromString(input);
-
-    const action = new DeleteAction(doc).prepare();
-    action.execute('*');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new DeleteAction(doc));
   });
   it('only deletes nearest enclosing environment', () => {
     const input = [
@@ -221,11 +174,6 @@ describe('DeleteAction', () => {
       '\\end{equation}$$',
     ].join('\n');
 
-    const doc = fromString(input);
-
-    const action = new DeleteAction(doc).prepare();
-    action.execute('*');
-
-    expect(doc.getValue()).toBe(expected);
+    testAction(input, expected, (doc) => new DeleteAction(doc));
   });
 });
