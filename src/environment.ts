@@ -86,7 +86,11 @@ export class Environment {
       this.newRange(newLine, envName, 2, END_LENGTH),
     );
 
-    doc.replaceRange('\n' + newEnvironment.print() + '\n', cursor);
+    const line = doc.getLine(cursor.line);
+    const frontPad = getPad(line.substr(0, cursor.ch));
+    const rearPad = getPad(line.substr(cursor.ch));
+
+    doc.replaceRange(frontPad + newEnvironment.print() + rearPad, cursor);
     doc.setCursor(nextLine(newLine));
     return newEnvironment;
   }
@@ -123,4 +127,11 @@ function nextLine(
   offset = 1,
 ): CodeMirror.Position {
   return { line: cursor.line + offset, ch: cr ? 0 : cursor.ch };
+}
+
+function getPad(text: string): string {
+  if (text.match(/^[ \t]*$/)) {
+    return '';
+  }
+  return '\n';
 }

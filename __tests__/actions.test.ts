@@ -50,7 +50,7 @@ describe('InsertAction', () => {
       '\\begin{equation}',
       '',
       '\\end{equation}',
-      '- 2',
+      ' - 2',
       '$$',
     ].join('\n');
     testAction(input, expected, (doc) => new InsertAction(doc));
@@ -62,12 +62,13 @@ describe('InsertAction', () => {
       'x^2 + 1',
       '\\begin{equation}',
       '',
-      '\\end{equation}$$',
+      '\\end{equation}',
+      '$$',
     ].join('\n');
     testAction(input, expected, (doc) => new InsertAction(doc));
   });
   it("doesn't add a newline before when all white space before the curosr", () => {
-    const input = ['$$', 'x^2 + 1|', '$$'].join('\n');
+    const input = ['$$', '|x^2 + 1', '$$'].join('\n');
     const expected = [
       '$$',
       '\\begin{equation}',
@@ -80,9 +81,13 @@ describe('InsertAction', () => {
   });
   it("doesn't add newlines if insert line is blank", () => {
     const input = ['$$', '|', '$$'].join('\n');
-    const expected = ['$$\\begin{equation}', '', '\\end{equation}$$'].join(
-      '\n',
-    );
+    const expected = [
+      '$$',
+      '\\begin{equation}',
+      '',
+      '\\end{equation}',
+      '$$',
+    ].join('\n');
     testAction(input, expected, (doc) => new InsertAction(doc));
   });
 });
