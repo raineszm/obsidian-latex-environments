@@ -36,6 +36,70 @@ describe('InsertAction', () => {
 
     expect(doc.getValue()).toBe(expected);
   });
+
+  it('adds newlines to separate from adjacent content', () => {
+    const input = ['$$', 'x^2 + 1| - 2', '$$'].join('\n');
+    const expected = [
+      '$$',
+      'x^2 + 1',
+      '\\begin{equation}',
+      '',
+      '\\end{equation}',
+      '- 2',
+      '$$',
+    ].join('\n');
+    const doc = fromString(input);
+
+    const action = new InsertAction(doc).prepare();
+    action.execute('equation');
+
+    expect(doc.getValue()).toBe(expected);
+  });
+  it("doesn't add a newline after when all white space after the curosr", () => {
+    const input = ['$$', 'x^2 + 1|', '$$'].join('\n');
+    const expected = [
+      '$$',
+      'x^2 + 1',
+      '\\begin{equation}',
+      '',
+      '\\end{equation}$$',
+    ].join('\n');
+    const doc = fromString(input);
+
+    const action = new InsertAction(doc).prepare();
+    action.execute('equation');
+
+    expect(doc.getValue()).toBe(expected);
+  });
+  it("doesn't add a newline before when all white space before the curosr", () => {
+    const input = ['$$', 'x^2 + 1|', '$$'].join('\n');
+    const expected = [
+      '$$',
+      '\\begin{equation}',
+      '',
+      '\\end{equation}',
+      'x^2 + 1',
+      '$$',
+    ].join('\n');
+    const doc = fromString(input);
+
+    const action = new InsertAction(doc).prepare();
+    action.execute('equation');
+
+    expect(doc.getValue()).toBe(expected);
+  });
+  it("doesn't add newlines if insert line is blank", () => {
+    const input = ['$$', '|', '$$'].join('\n');
+    const expected = ['$$\\begin{equation}', '', '\\end{equation}$$'].join(
+      '\n',
+    );
+    const doc = fromString(input);
+
+    const action = new InsertAction(doc).prepare();
+    action.execute('equation');
+
+    expect(doc.getValue()).toBe(expected);
+  });
 });
 describe('ChangeAction', () => {
   it('changes the name of surrounding environment', () => {
