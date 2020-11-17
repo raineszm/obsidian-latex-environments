@@ -3,7 +3,7 @@ import { WrapAction } from './wrapAction';
 import { Environment } from '../environment';
 
 export class InsertAction extends Action {
-  prepare(): Action {
+  prepare (): Action {
     if (this.doc.somethingSelected()) {
       return new WrapAction(
         this.doc,
@@ -14,7 +14,7 @@ export class InsertAction extends Action {
     return this;
   }
 
-  execute(envName: string): void {
+  execute (envName: string): void {
     Environment.create(envName, this.doc, this.doc.getCursor());
   }
 }

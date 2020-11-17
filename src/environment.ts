@@ -1,42 +1,42 @@
-import * as CodeMirror from 'codemirror';
+import CodeMirror from 'codemirror';
 
-export type PosRange = {
-  from: CodeMirror.Position;
-  to: CodeMirror.Position;
-};
+export interface PosRange {
+  from: CodeMirror.Position
+  to: CodeMirror.Position
+}
 
 const BEGIN_LENGTH = 8;
 const END_LENGTH = 6;
 
 export class Environment {
-  constructor(
+  constructor (
     public doc: CodeMirror.Doc,
     private _name: string,
     private _start: PosRange,
     private _end: PosRange,
   ) {}
 
-  public get name(): string {
+  public get name (): string {
     return this._name;
   }
 
-  public get start(): PosRange {
+  public get start (): PosRange {
     return this._start;
   }
 
-  public get end(): PosRange {
+  public get end (): PosRange {
     return this._end;
   }
 
-  public get beginString(): string {
+  public get beginString (): string {
     return `\\begin{${this._name}}`;
   }
 
-  public get endString(): string {
+  public get endString (): string {
     return `\\end{${this._name}}`;
   }
 
-  public replace(envName: string): Environment {
+  public replace (envName: string): Environment {
     this._name = envName;
     this.doc.replaceRange(this.beginString, this.start.from, this.start.to);
     this.doc.replaceRange(this.endString, this.end.from, this.end.to);
@@ -51,11 +51,11 @@ export class Environment {
     return this;
   }
 
-  public print(contents = '\n\n'): string {
+  public print (contents = '\n\n'): string {
     return `${this.beginString}${contents}${this.endString}`;
   }
 
-  private static newRange(
+  private static newRange (
     cursor: CodeMirror.Position,
     envName: string,
     lineOffset: number,
@@ -73,7 +73,7 @@ export class Environment {
     };
   }
 
-  public static create(
+  public static create (
     envName: string,
     doc: CodeMirror.Doc,
     cursor: CodeMirror.Position,
@@ -95,7 +95,7 @@ export class Environment {
     return newEnvironment;
   }
 
-  public static wrap(
+  public static wrap (
     envName: string,
     doc: CodeMirror.Doc,
     from: CodeMirror.Position,
@@ -115,13 +115,13 @@ export class Environment {
     return newEnvironment;
   }
 
-  public unwrap(): void {
+  public unwrap (): void {
     this.doc.replaceRange('', this.start.from, this.start.to);
     this.doc.replaceRange('', this.end.from, this.end.to);
   }
 }
 
-function nextLine(
+function nextLine (
   cursor: CodeMirror.Position,
   cr = false,
   offset = 1,
@@ -129,8 +129,8 @@ function nextLine(
   return { line: cursor.line + offset, ch: cr ? 0 : cursor.ch };
 }
 
-function getPad(text: string): string {
-  if (text.match(/^[ \t]*$/)) {
+function getPad (text: string): string {
+  if (text.match(/^[ \t]*$/) !== null) {
     return '';
   }
   return '\n';

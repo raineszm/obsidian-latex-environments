@@ -5,12 +5,12 @@ import { DeleteAction } from '../src/actions/deleteAction';
 import { Action } from '../src/actions/action';
 import CodeMirror from 'codemirror';
 
-function testAction(
+function testAction (
   input: string,
   expected: string,
   actionFactory: (doc: CodeMirror.Doc) => Action,
   envName = 'equation',
-) {
+): void {
   const doc = fromString(input);
 
   const action = actionFactory(doc).prepare();

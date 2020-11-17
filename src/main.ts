@@ -1,6 +1,6 @@
 import { MarkdownView, Notice, Plugin } from 'obsidian';
 import { LatexEnvironmentsSettings } from './settings';
-import * as CodeMirror from 'codemirror';
+import CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
 import { LatexEnvironmentsSettingTab } from './latexEnvironmentsSettingsTab';
@@ -12,9 +12,9 @@ import { DeleteAction } from './actions/deleteAction';
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
 
-  async onload(): Promise<void> {
+  async onload (): Promise<void> {
     const settings = await this.loadData();
-    if (settings) {
+    if (settings !== null) {
       this.settings = settings;
     }
 
@@ -39,10 +39,10 @@ export default class LatexEnvironments extends Plugin {
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
-  private mathModeCallback(actionFactory: (doc: CodeMirror.Doc) => Action) {
+  private mathModeCallback (actionFactory: (doc: CodeMirror.Doc) => Action) {
     return (checking: boolean) => {
       const leaf = this.app.workspace.activeLeaf;
-      if (leaf && leaf.view instanceof MarkdownView) {
+      if (leaf.view instanceof MarkdownView) {
         const editor = leaf.view.sourceMode.cmEditor;
         const cursor = editor.getCursor();
 
@@ -55,6 +55,7 @@ export default class LatexEnvironments extends Plugin {
             const action = actionFactory(editor.getDoc()).prepare();
             this.withPromptName(editor, action);
           } catch (e) {
+            /* eslint-disable-next-line no-new */
             new Notice(e.message);
           }
         }
@@ -64,17 +65,18 @@ export default class LatexEnvironments extends Plugin {
     };
   }
 
-  private withPromptName(editor: CodeMirror.Editor, action: Action) {
-    const call = (envName: string) => {
+  private withPromptName (editor: CodeMirror.Editor, action: Action): void {
+    const call = (envName: string): void => {
       editor.operation(() => action.execute(envName));
       editor.focus();
     };
 
     if (action.needsName) {
+      const suggested = action.suggestName();
       EnvModal.promise(
         this.app,
-        action.suggestName() || this.settings.defaultEnvironment,
-      ).then(call);
+        suggested !== undefined ? suggested : this.settings.defaultEnvironment,
+      ).then(call, () => {});
     } else {
       call('*');
     }

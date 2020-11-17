@@ -59,7 +59,7 @@ describe('MathBlock', () => {
       const block = new MathBlock(doc, doc.getCursor());
       const env = block.getEnclosingEnvironment(doc.getCursor());
       expect(env).toBeTruthy();
-      if (env) {
+      if (env !== undefined) {
         expect(doc.getRange(env.start.from, env.start.to)).toBe(
           '\\begin{equation}',
         );

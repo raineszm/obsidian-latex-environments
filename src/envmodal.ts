@@ -2,16 +2,16 @@ import { App, Modal, TextComponent } from 'obsidian';
 
 export class EnvModal extends Modal {
   private submitted = false;
-  constructor(
+  constructor (
     app: App,
     private name: string,
-    private resolve: (name: string) => void,
-    private reject: () => void,
+    private readonly resolve: (name: string) => void,
+    private readonly reject: () => void,
   ) {
     super(app);
   }
 
-  onOpen(): void {
+  onOpen (): void {
     const { contentEl, containerEl } = this;
     const title = containerEl.find('.modal-title');
     title.innerText = 'Environment Name';
@@ -20,7 +20,7 @@ export class EnvModal extends Modal {
       const { inputEl } = textEl;
       inputEl.className = 'prompt-input';
       inputEl.addEventListener('keypress', (event) => {
-        if (event.key == 'Enter') {
+        if (event.key === 'Enter') {
           this.submit();
         }
       });
@@ -42,20 +42,20 @@ export class EnvModal extends Modal {
     });
   }
 
-  private submit(): void {
+  private submit (): void {
     this.submitted = true;
     this.resolve(this.name);
     this.close();
   }
 
-  onClose(): void {
+  onClose (): void {
     const { contentEl } = this;
     contentEl.empty();
     if (!this.submitted) this.reject();
   }
 
-  static promise(app: App, defaultName: string): Promise<string> {
-    return new Promise((resolve, reject) => {
+  static async promise (app: App, defaultName: string): Promise<string> {
+    return await new Promise<string>((resolve, reject) => {
       new EnvModal(app, defaultName, resolve, reject).open();
     });
   }

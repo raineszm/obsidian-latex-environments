@@ -1,4 +1,4 @@
-import * as CodeMirror from 'codemirror';
+import CodeMirror from 'codemirror';
 import { Environment, PosRange } from './environment';
 
 export class MathBlock {
@@ -6,18 +6,18 @@ export class MathBlock {
   readonly endPosition: CodeMirror.Position;
   public doc: CodeMirror.Doc;
 
-  constructor(doc: CodeMirror.Doc, cursor: CodeMirror.Position) {
+  constructor (doc: CodeMirror.Doc, cursor: CodeMirror.Position) {
     const searchCursor = doc.getSearchCursor('$$', cursor);
-    this.startPosition = searchCursor.findPrevious()
+    this.startPosition = searchCursor.findPrevious() !== false
       ? searchCursor.to()
       : { line: doc.firstLine(), ch: 0 };
-    this.endPosition = searchCursor.findNext()
+    this.endPosition = searchCursor.findNext() !== false
       ? searchCursor.from()
       : { line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length - 1 };
     this.doc = doc;
   }
 
-  public getEnclosingEnvironment(
+  public getEnclosingEnvironment (
     cursor: CodeMirror.Position,
   ): Environment | undefined {
     const beginEnds = new BeginEnds(
@@ -36,12 +36,12 @@ export class MathBlock {
         return (
           env.type === 'begin' &&
           (from.line < cursor.line ||
-            (from.line == cursor.line && from.ch <= cursor.ch))
+            (from.line === cursor.line && from.ch <= cursor.ch))
         );
       })
       .pop();
 
-    if (!start) {
+    if (start === undefined) {
       return undefined;
     }
 
@@ -49,32 +49,32 @@ export class MathBlock {
       const from = env.pos.from;
       return (
         from.line > cursor.line ||
-        (from.line == cursor.line && from.ch > cursor.ch)
+        (from.line === cursor.line && from.ch > cursor.ch)
       );
     });
 
     let open = 1;
-    let end: BeginEnd | undefined = undefined;
+    let end: BeginEnd | undefined;
     for (const env of after) {
-      if (env.type == 'begin') {
+      if (env.type === 'begin') {
         open++;
       } else {
         open--;
-        if (!open) {
+        if (open === 0) {
           end = env;
           break;
         }
       }
     }
 
-    if (!end) {
+    if (end === undefined) {
       throw new Error('current environment is never closed');
     }
 
     return new Environment(this.doc, start.name, start.pos, end.pos);
   }
 
-  public static isMathMode(
+  public static isMathMode (
     cursor: CodeMirror.Position,
     editor: CodeMirror.Editor,
   ): boolean {
@@ -85,15 +85,15 @@ export class MathBlock {
 }
 
 interface BeginEnd {
-  name: string;
-  type: 'begin' | 'end';
-  pos: PosRange;
+  name: string
+  type: 'begin' | 'end'
+  pos: PosRange
 }
 
 class BeginEnds implements IterableIterator<BeginEnd> {
-  private openEnvs: BeginEnd[] = [];
+  private readonly openEnvs: BeginEnd[] = [];
   private search: CodeMirror.SearchCursor;
-  constructor(
+  constructor (
     readonly doc: CodeMirror.Doc,
     readonly start: CodeMirror.Position,
     readonly end: CodeMirror.Position,
@@ -101,24 +101,24 @@ class BeginEnds implements IterableIterator<BeginEnd> {
     this.search = this.getEnvCursor(this.start);
   }
 
-  public reset(): void {
+  public reset (): void {
     this.search = this.getEnvCursor(this.start);
   }
 
-  private getEnvCursor(start: CodeMirror.Position): CodeMirror.SearchCursor {
+  private getEnvCursor (start: CodeMirror.Position): CodeMirror.SearchCursor {
     return this.doc.getSearchCursor(/\\(begin|end){\s*([^}]+)\s*}/m, start);
   }
 
-  public get isOpen(): boolean {
-    return !!this.openEnvs.length;
+  public get isOpen (): boolean {
+    return this.openEnvs.length > 0;
   }
 
-  [Symbol.iterator](): IterableIterator<BeginEnd> {
+  [Symbol.iterator] (): IterableIterator<BeginEnd> {
     this.reset();
     return this;
   }
 
-  next(): IteratorResult<BeginEnd> {
+  next (): IteratorResult<BeginEnd> {
     const match = this.search.findNext();
     const to = this.search.to();
 
@@ -149,7 +149,7 @@ class BeginEnds implements IterableIterator<BeginEnd> {
       }
       case 'end': {
         const current = this.openEnvs.pop();
-        if (!current) {
+        if (current === undefined) {
           throw new Error('closing environment which was never opened');
         }
         if (current.name !== match[2]) {
@@ -168,6 +168,6 @@ class BeginEnds implements IterableIterator<BeginEnd> {
         };
       }
     }
-    throw new Error(`regex returned unexpected result ${match[1]}`);
+    throw new Error(`regex returned unexpected result ${match[1] as string}`);
   }
 }
