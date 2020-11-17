@@ -8,8 +8,8 @@
     "project": "tsconfig.json",
     "sourceType": "module"
   },
-  "extends": [
-    "standard-with-typescript",
-    "prettier"
-  ]
+  "extends": ["standard-with-typescript", "prettier"],
+  "rules": {
+    "@typescript-eslint/semi": "off"
+  }
 }
