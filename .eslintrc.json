@@ -8,7 +8,12 @@
     "project": "tsconfig.json",
     "sourceType": "module"
   },
-  "extends": ["standard-with-typescript", "prettier"],
+  "extends": [
+    "standard-with-typescript",
+    "prettier",
+    "plugin:jest/recommended"
+  ],
+  "plugins": ["jest"],
   "rules": {
     "@typescript-eslint/semi": "off"
   }

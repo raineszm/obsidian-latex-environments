@@ -45,7 +45,7 @@ describe('MathBlock', () => {
         expect((env as Environment).name).toBe('equation');
       });
     });
-    describe('returns matching begin and end', () => {
+    test('returns matching begin and end', () => {
       const doc = fromString(
         [
           '$$\\begin{equation}|',
@@ -60,9 +60,11 @@ describe('MathBlock', () => {
       const env = block.getEnclosingEnvironment(doc.getCursor());
       expect(env).toBeTruthy();
       if (env !== undefined) {
+        // eslint-disable-next-line jest/no-conditional-expect
         expect(doc.getRange(env.start.from, env.start.to)).toBe(
           '\\begin{equation}',
         );
+        // eslint-disable-next-line jest/no-conditional-expect
         expect(doc.getRange(env.end.from, env.end.to)).toBe('\\end{equation}');
       }
     });

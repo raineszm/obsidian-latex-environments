@@ -15,6 +15,7 @@ devDependencies:
   eslint-config-prettier: 6.15.0_eslint@7.13.0
   eslint-config-standard-with-typescript: 19.0.1_ceebf0eb5c9064f29b0a7bfef4ab2b40
   eslint-plugin-import: 2.22.1_eslint@7.13.0
+  eslint-plugin-jest: 24.1.3_eslint@7.13.0+typescript@4.0.5
   eslint-plugin-node: 11.1.0_eslint@7.13.0
   eslint-plugin-promise: 4.2.1
   eslint-plugin-standard: 4.1.0_eslint@7.13.0
@@ -2548,6 +2549,18 @@ packages:
       eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0
     resolution:
       integrity: sha512-8K7JjINHOpH64ozkAhpT3sd+FswIZTfMZTjdx052pnWrgRCVfp8op9tbjpAk3DdUeI/Ba4C8OjdC0r90erHEOw==
+  /eslint-plugin-jest/24.1.3_eslint@7.13.0+typescript@4.0.5:
+    dependencies:
+      '@typescript-eslint/experimental-utils': 4.8.1_eslint@7.13.0+typescript@4.0.5
+      eslint: 7.13.0
+    dev: true
+    engines:
+      node: '>=10'
+    peerDependencies:
+      eslint: '>=5'
+      typescript: '*'
+    resolution:
+      integrity: sha512-dNGGjzuEzCE3d5EPZQ/QGtmlMotqnYWD/QpCZ1UuZlrMAdhG5rldh0N0haCvhGnUkSeuORS5VNROwF9Hrgn3Lg==
   /eslint-plugin-node/11.1.0_eslint@7.13.0:
     dependencies:
       eslint: 7.13.0
@@ -7240,6 +7253,7 @@ specifiers:
   eslint-config-prettier: ^6.15.0
   eslint-config-standard-with-typescript: ^19.0.1
   eslint-plugin-import: '2'
+  eslint-plugin-jest: ^24.1.3
   eslint-plugin-node: '11'
   eslint-plugin-promise: '4'
   eslint-plugin-standard: '4'
