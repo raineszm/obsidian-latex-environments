@@ -2,7 +2,7 @@ import { App, Modal, TextComponent } from 'obsidian';
 
 export class EnvModal extends Modal {
   private submitted = false;
-  constructor (
+  constructor(
     app: App,
     private name: string,
     private readonly resolve: (name: string) => void,
@@ -11,7 +11,7 @@ export class EnvModal extends Modal {
     super(app);
   }
 
-  onOpen (): void {
+  onOpen(): void {
     const { contentEl, containerEl } = this;
     const title = containerEl.find('.modal-title');
     title.innerText = 'Environment Name';
@@ -42,19 +42,19 @@ export class EnvModal extends Modal {
     });
   }
 
-  private submit (): void {
+  private submit(): void {
     this.submitted = true;
     this.resolve(this.name);
     this.close();
   }
 
-  onClose (): void {
+  onClose(): void {
     const { contentEl } = this;
     contentEl.empty();
     if (!this.submitted) this.reject();
   }
 
-  static async promise (app: App, defaultName: string): Promise<string> {
+  static async promise(app: App, defaultName: string): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
       new EnvModal(app, defaultName, resolve, reject).open();
     });

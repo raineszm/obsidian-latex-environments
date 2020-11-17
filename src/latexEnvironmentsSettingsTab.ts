@@ -4,12 +4,12 @@ import LatexEnvironments from './main';
 export class LatexEnvironmentsSettingTab extends PluginSettingTab {
   private readonly plugin: LatexEnvironments;
 
-  constructor (app: App, plugin: LatexEnvironments) {
+  constructor(app: App, plugin: LatexEnvironments) {
     super(app, plugin);
     this.plugin = plugin;
   }
 
-  display (): void {
+  display(): void {
     const { containerEl } = this;
 
     containerEl.empty();

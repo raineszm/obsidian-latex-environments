@@ -3,7 +3,7 @@ import * as CodeMirror from 'codemirror';
 import { Environment } from '../environment';
 
 export class WrapAction extends Action {
-  constructor (
+  constructor(
     doc: CodeMirror.Doc,
     public readonly from: CodeMirror.Position,
     public readonly to: CodeMirror.Position,
@@ -12,11 +12,11 @@ export class WrapAction extends Action {
     super(doc);
   }
 
-  prepare (): Action {
+  prepare(): Action {
     return this;
   }
 
-  execute (envName: string): void {
+  execute(envName: string): void {
     Environment.wrap(
       envName,
       this.doc,

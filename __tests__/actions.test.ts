@@ -5,7 +5,7 @@ import { DeleteAction } from '../src/actions/deleteAction';
 import { Action } from '../src/actions/action';
 import CodeMirror from 'codemirror';
 
-function runAction (
+function runAction(
   input: string,
   actionFactory: (doc: CodeMirror.Doc) => Action,
   envName = 'equation',
@@ -96,7 +96,9 @@ describe('ChangeAction', () => {
     const expected = ['$$\\begin{multline}', '', '\\end{multline}$$'].join(
       '\n',
     );
-    expect(runAction(input, (doc) => new ChangeAction(doc), 'multline')).toBe(expected);
+    expect(runAction(input, (doc) => new ChangeAction(doc), 'multline')).toBe(
+      expected,
+    );
   });
 
   it('when no surrounding environment wraps the whole block', () => {

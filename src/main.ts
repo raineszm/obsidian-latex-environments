@@ -12,7 +12,7 @@ import { DeleteAction } from './actions/deleteAction';
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
 
-  async onload (): Promise<void> {
+  async onload(): Promise<void> {
     const settings = await this.loadData();
     if (settings !== null) {
       this.settings = settings;
@@ -39,7 +39,7 @@ export default class LatexEnvironments extends Plugin {
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
-  private mathModeCallback (actionFactory: (doc: CodeMirror.Doc) => Action) {
+  private mathModeCallback(actionFactory: (doc: CodeMirror.Doc) => Action) {
     return (checking: boolean) => {
       const leaf = this.app.workspace.activeLeaf;
       if (leaf.view instanceof MarkdownView) {
@@ -65,7 +65,7 @@ export default class LatexEnvironments extends Plugin {
     };
   }
 
-  private withPromptName (editor: CodeMirror.Editor, action: Action): void {
+  private withPromptName(editor: CodeMirror.Editor, action: Action): void {
     const call = (envName: string): void => {
       editor.operation(() => action.execute(envName));
       editor.focus();

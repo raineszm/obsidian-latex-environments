@@ -7,11 +7,11 @@ export class ChangeAction extends Action {
   private current: Environment | undefined;
   private name: string | undefined;
 
-  public suggestName (): string | undefined {
+  public suggestName(): string | undefined {
     return this.name;
   }
 
-  prepare (): Action {
+  prepare(): Action {
     const cursor = this.doc.getCursor();
     const block = new MathBlock(this.doc, cursor);
     this.current = block.getEnclosingEnvironment(cursor);
@@ -27,7 +27,7 @@ export class ChangeAction extends Action {
     return this;
   }
 
-  execute (envName: string): void {
+  execute(envName: string): void {
     if (this.current !== undefined) this.current.replace(envName);
   }
 }

@@ -6,18 +6,20 @@ export class MathBlock {
   readonly endPosition: CodeMirror.Position;
   public doc: CodeMirror.Doc;
 
-  constructor (doc: CodeMirror.Doc, cursor: CodeMirror.Position) {
+  constructor(doc: CodeMirror.Doc, cursor: CodeMirror.Position) {
     const searchCursor = doc.getSearchCursor('$$', cursor);
-    this.startPosition = searchCursor.findPrevious() !== false
-      ? searchCursor.to()
-      : { line: doc.firstLine(), ch: 0 };
-    this.endPosition = searchCursor.findNext() !== false
-      ? searchCursor.from()
-      : { line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length - 1 };
+    this.startPosition =
+      searchCursor.findPrevious() !== false
+        ? searchCursor.to()
+        : { line: doc.firstLine(), ch: 0 };
+    this.endPosition =
+      searchCursor.findNext() !== false
+        ? searchCursor.from()
+        : { line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length - 1 };
     this.doc = doc;
   }
 
-  public getEnclosingEnvironment (
+  public getEnclosingEnvironment(
     cursor: CodeMirror.Position,
   ): Environment | undefined {
     const beginEnds = new BeginEnds(
@@ -74,7 +76,7 @@ export class MathBlock {
     return new Environment(this.doc, start.name, start.pos, end.pos);
   }
 
-  public static isMathMode (
+  public static isMathMode(
     cursor: CodeMirror.Position,
     editor: CodeMirror.Editor,
   ): boolean {
@@ -85,15 +87,15 @@ export class MathBlock {
 }
 
 interface BeginEnd {
-  name: string
-  type: 'begin' | 'end'
-  pos: PosRange
+  name: string;
+  type: 'begin' | 'end';
+  pos: PosRange;
 }
 
 class BeginEnds implements IterableIterator<BeginEnd> {
   private readonly openEnvs: BeginEnd[] = [];
   private search: CodeMirror.SearchCursor;
-  constructor (
+  constructor(
     readonly doc: CodeMirror.Doc,
     readonly start: CodeMirror.Position,
     readonly end: CodeMirror.Position,
@@ -101,24 +103,24 @@ class BeginEnds implements IterableIterator<BeginEnd> {
     this.search = this.getEnvCursor(this.start);
   }
 
-  public reset (): void {
+  public reset(): void {
     this.search = this.getEnvCursor(this.start);
   }
 
-  private getEnvCursor (start: CodeMirror.Position): CodeMirror.SearchCursor {
+  private getEnvCursor(start: CodeMirror.Position): CodeMirror.SearchCursor {
     return this.doc.getSearchCursor(/\\(begin|end){\s*([^}]+)\s*}/m, start);
   }
 
-  public get isOpen (): boolean {
+  public get isOpen(): boolean {
     return this.openEnvs.length > 0;
   }
 
-  [Symbol.iterator] (): IterableIterator<BeginEnd> {
+  [Symbol.iterator](): IterableIterator<BeginEnd> {
     this.reset();
     return this;
   }
 
-  next (): IteratorResult<BeginEnd> {
+  next(): IteratorResult<BeginEnd> {
     const match = this.search.findNext();
     const to = this.search.to();
 

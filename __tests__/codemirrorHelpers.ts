@@ -1,7 +1,7 @@
-import CodeMirror, {Doc} from 'codemirror';
+import CodeMirror, { Doc } from 'codemirror';
 import 'codemirror/addon/search/searchcursor';
 
-export function fromString (template: string): CodeMirror.Doc {
+export function fromString(template: string): CodeMirror.Doc {
   const doc = Doc(template);
   const search = doc.getSearchCursor('|');
   if (search.findNext() !== false) {
