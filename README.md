@@ -37,7 +37,7 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ###  Commands
 
-This plugin currently provides 2 commands, which do not have default bindings.
+This plugin currently provides 3 commands, which do not have default bindings.
 Both commands only work when the cursor is inside a math block.
 Both commands will also query for the name of the environment.
 
