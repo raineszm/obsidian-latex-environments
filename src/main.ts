@@ -21,25 +21,27 @@ export default class LatexEnvironments extends Plugin {
     this.addCommand({
       id: 'insert-latex-env',
       name: 'Insert LaTeX environment',
-      checkCallback: this.mathModeCallback((doc) => new InsertAction(doc)),
+      checkCallback: this.mathModeCallback(InsertAction),
     });
 
     this.addCommand({
       id: 'change-latex-env',
       name: 'Change LaTeX environment',
-      checkCallback: this.mathModeCallback((doc) => new ChangeAction(doc)),
+      checkCallback: this.mathModeCallback(ChangeAction),
     });
 
     this.addCommand({
       id: 'delete-latex-env',
       name: 'Delete LaTeX environment',
-      checkCallback: this.mathModeCallback((doc) => new DeleteAction(doc)),
+      checkCallback: this.mathModeCallback(DeleteAction),
     });
 
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
   }
 
-  private mathModeCallback(actionFactory: (doc: CodeMirror.Doc) => Action) {
+  private mathModeCallback<A extends Action>(
+    ActionType: new (doc: CodeMirror.Doc) => A,
+  ) {
     return (checking: boolean) => {
       const leaf = this.app.workspace.activeLeaf;
       if (leaf.view instanceof MarkdownView) {
@@ -52,7 +54,7 @@ export default class LatexEnvironments extends Plugin {
 
         if (!checking) {
           try {
-            const action = actionFactory(editor.getDoc()).prepare();
+            const action = new ActionType(editor.getDoc()).prepare();
             this.withPromptName(editor, action);
           } catch (e) {
             /* eslint-disable-next-line no-new */
