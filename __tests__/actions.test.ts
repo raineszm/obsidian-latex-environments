@@ -9,14 +9,20 @@ function runAction<A extends Action>(
   input: string,
   ActionType: new (doc: CodeMirror.Doc) => A,
   envName = 'equation',
+  visualizeCursor = false,
 ): string {
   const doc = fromString(input);
 
   const action = new ActionType(doc).prepare();
   action.execute(envName);
+  if (visualizeCursor) {
+    doc.replaceSelection('|');
+  }
 
   return doc.getValue();
 }
+
+// | indicates the location of the cursor
 
 describe('InsertAction', () => {
   it('adds environment at point', () => {
@@ -29,6 +35,17 @@ describe('InsertAction', () => {
       '$$',
     ].join('\n');
     expect(runAction(input, InsertAction)).toBe(expected);
+  });
+  it('sets the cursor in the new environment', () => {
+    const input = '$$|$$';
+    const expected = [
+      '$$',
+      '\\begin{equation}',
+      '|',
+      '\\end{equation}',
+      '$$',
+    ].join('\n');
+    expect(runAction(input, InsertAction, 'equation', true)).toBe(expected);
   });
   it('wraps the selection with an environment', () => {
     const input = '$$|x^2 + 1|$$';
