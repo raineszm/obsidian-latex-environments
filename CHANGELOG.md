@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.1...0.1.2) (2020-11-23)
+
+
+### Bug Fixes
+
+* **environment:** update calculation of cursor position after operations ([9dfaaa7](https://github.com/raineszm/obsidian-latex-environments/commit/9dfaaa7001235963b5841167d51133530d4c54ed)), closes [#11](https://github.com/raineszm/obsidian-latex-environments/issues/11)
+
 ### [0.1.1](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.0...0.1.1) (2020-11-14)
 
 
