@@ -91,7 +91,7 @@ export class Environment {
     const rearPad = getPad(line.substr(cursor.ch));
 
     doc.replaceRange(frontPad + newEnvironment.print() + rearPad, cursor);
-    doc.setCursor(nextLine(newLine));
+    doc.setCursor(nextLine(newLine, false, frontPad.length));
     return newEnvironment;
   }
 

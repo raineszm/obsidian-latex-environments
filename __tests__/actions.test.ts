@@ -38,13 +38,14 @@ describe('InsertAction', () => {
     const input = '$$|x^2 + 1|$$';
     const expected = [
       '$$\\begin{equation}',
-      'x^2 + 1|',
+      '|x^2 + 1',
       '\\end{equation}$$',
     ].join('\n');
 
     const { value, cursor } = valueAndCursor(expected);
     const doc = runAction(input, InsertAction);
     expect(doc.getValue()).toBe(value);
+    expect(doc.somethingSelected()).toBeFalsy();
     expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
   });
 
@@ -79,7 +80,7 @@ describe('InsertAction', () => {
     expect(doc.getValue()).toBe(value);
     expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
   });
-  it("doesn't add a newline before when all white space before the curosr", () => {
+  it("doesn't add a newline before when all white space before the cursor", () => {
     const input = ['$$', '|x^2 + 1', '$$'].join('\n');
     const expected = [
       '$$',
