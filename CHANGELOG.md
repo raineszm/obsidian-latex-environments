@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.2...0.1.3) (2020-12-16)
+
+
+### Bug Fixes
+
+* **wrap:** fix surrounding environment detection ([921a9c2](https://github.com/raineszm/obsidian-latex-environments/commit/921a9c2bbfdab4039d7213dd192f65243d5ede2a)), closes [#14](https://github.com/raineszm/obsidian-latex-environments/issues/14)
+
 ### [0.1.2](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.1...0.1.2) (2020-11-23)
 
 
