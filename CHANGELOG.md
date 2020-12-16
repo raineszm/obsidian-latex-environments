@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.3...0.2.0) (2020-12-16)
+
+
+### Features
+
+* **modal:** switch to using obsidian's FuzzyMatchModal for environment queries ([959f14d](https://github.com/raineszm/obsidian-latex-environments/commit/959f14d7a592a1f4a908f3c2299b24686cd48699))
+* **settings:** add setting for extra environments for completion ([c684dc8](https://github.com/raineszm/obsidian-latex-environments/commit/c684dc8b4b89650a31a7b75f5546b4c85dc737a4))
+
 ### [0.1.3](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.2...0.1.3) (2020-12-16)
 
 
