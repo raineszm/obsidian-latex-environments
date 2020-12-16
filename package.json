@@ -69,7 +69,7 @@
     "husky": "^4.3.0",
     "jest": "^26.6.3",
     "lint-staged": "^10.5.1",
-    "obsidian": "https://github.com/obsidianmd/obsidian-api/tarball/master",
+    "obsidian": "obsidianmd/obsidian-api#ea530cce1adaa33eb891f053a56a12fa8640b834",
     "prettier": "^2.1.2",
     "rollup": "^2.33.1",
     "rollup-plugin-copy": "^3.3.0",

@@ -75,10 +75,11 @@ export default class LatexEnvironments extends Plugin {
 
     if (action.needsName) {
       const suggested = action.suggestName();
-      EnvModal.promise(
+      EnvModal.callback(
         this.app,
         suggested !== undefined ? suggested : this.settings.defaultEnvironment,
-      ).then(call, () => {});
+        call,
+      );
     } else {
       call('*');
     }
