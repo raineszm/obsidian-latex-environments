@@ -1,10 +1,12 @@
 import { App, FuzzySuggestModal } from 'obsidian';
+import { LatexEnvironmentsSettings } from './settings';
 
 export class EnvModal extends FuzzySuggestModal<string> {
   private matched: boolean = false;
   static ENVIRONMENTS = ['equation', 'multline'];
   constructor(
     app: App,
+    private readonly settings: LatexEnvironmentsSettings,
     private readonly name: string,
     private readonly callback: (name: string) => void,
   ) {
@@ -14,10 +16,18 @@ export class EnvModal extends FuzzySuggestModal<string> {
       { command: '↵', purpose: 'to select' },
       { command: 'esc', purpose: 'to dismiss' },
     ]);
+    this.setPlaceholder('environment name');
   }
 
   public getItems(): string[] {
-    return EnvModal.ENVIRONMENTS;
+    return Array.from(
+      new Set(
+        [this.settings.defaultEnvironment].concat(
+          this.settings.customEnvironments,
+          EnvModal.ENVIRONMENTS,
+        ),
+      ),
+    );
   }
 
   public getItemText(item: string): string {
@@ -39,9 +49,10 @@ export class EnvModal extends FuzzySuggestModal<string> {
 
   static callback(
     app: App,
+    settings: LatexEnvironmentsSettings,
     defaultName: string,
     call: (name: string) => void,
   ): void {
-    new EnvModal(app, defaultName, call).open();
+    new EnvModal(app, settings, defaultName, call).open();
   }
 }

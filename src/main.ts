@@ -1,5 +1,5 @@
 import { MarkdownView, Notice, Plugin } from 'obsidian';
-import { LatexEnvironmentsSettings } from './settings';
+import { ensureSettings, LatexEnvironmentsSettings } from './settings';
 import CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
@@ -15,7 +15,7 @@ export default class LatexEnvironments extends Plugin {
   async onload(): Promise<void> {
     const settings = await this.loadData();
     if (settings !== null) {
-      this.settings = settings;
+      this.settings = ensureSettings(settings);
     }
 
     this.addCommand({
@@ -77,6 +77,7 @@ export default class LatexEnvironments extends Plugin {
       const suggested = action.suggestName();
       EnvModal.callback(
         this.app,
+        this.settings,
         suggested !== undefined ? suggested : this.settings.defaultEnvironment,
         call,
       );

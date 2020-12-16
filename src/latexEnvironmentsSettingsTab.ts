@@ -28,5 +28,22 @@ export class LatexEnvironmentsSettingTab extends PluginSettingTab {
             await this.plugin.saveData(this.plugin.settings);
           }),
       );
+
+    new Setting(containerEl)
+      .setName('Extra environments')
+      .setDesc(
+        'Environment names to be suggested for completion (one per line)',
+      )
+      .addTextArea((area) => {
+        area
+          .setValue(this.plugin.settings.customEnvironments.join('\n'))
+          .onChange(async (value) => {
+            this.plugin.settings.customEnvironments = value
+              .split('\n')
+              .map((x) => x.trim())
+              .filter((x) => x.length > 0);
+            await this.plugin.saveData(this.plugin.settings);
+          });
+      });
   }
 }
