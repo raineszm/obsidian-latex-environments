@@ -2,6 +2,7 @@ import { App, FuzzySuggestModal } from 'obsidian';
 
 export class EnvModal extends FuzzySuggestModal<string> {
   private matched: boolean = false;
+  static ENVIRONMENTS = ['equation', 'multline'];
   constructor(
     app: App,
     private readonly name: string,
@@ -9,12 +10,14 @@ export class EnvModal extends FuzzySuggestModal<string> {
   ) {
     super(app);
     this.setInstructions([
-      { command: 'Return', purpose: 'Select environment' },
+      { command: '↑↓', purpose: 'to navigate' },
+      { command: '↵', purpose: 'to select' },
+      { command: 'esc', purpose: 'to dismiss' },
     ]);
   }
 
   public getItems(): string[] {
-    return ['equation', 'multline'];
+    return EnvModal.ENVIRONMENTS;
   }
 
   public getItemText(item: string): string {
