@@ -110,7 +110,12 @@ export class Environment {
     );
     doc.replaceRange(outerPad + newEnvironment.endString, to);
     doc.replaceRange(newEnvironment.beginString + outerPad, from);
-    doc.setCursor(nextLine(from, true));
+    if (doc.somethingSelected()) {
+      doc.setCursor(nextLine(from, true));
+    } else {
+      const lineOffset = newEnvironment.start.from.line - from.line;
+      doc.setCursor(nextLine(doc.getCursor(), false, lineOffset));
+    }
 
     return newEnvironment;
   }

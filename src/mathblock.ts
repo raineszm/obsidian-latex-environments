@@ -47,11 +47,12 @@ export class MathBlock {
       return undefined;
     }
 
+    const startTo = start.pos.to;
     const after = environments.filter((env) => {
       const from = env.pos.from;
       return (
-        from.line > cursor.line ||
-        (from.line === cursor.line && from.ch > cursor.ch)
+        from.line > startTo.line ||
+        (from.line === startTo.line && from.ch > startTo.ch)
       );
     });
 
@@ -71,6 +72,14 @@ export class MathBlock {
 
     if (end === undefined) {
       throw new Error('current environment is never closed');
+    }
+
+    const endTo = end.pos.to;
+    if (
+      endTo.line < cursor.line ||
+      (endTo.line === cursor.line && endTo.ch < cursor.ch)
+    ) {
+      return undefined;
     }
 
     return new Environment(this.doc, start.name, start.pos, end.pos);

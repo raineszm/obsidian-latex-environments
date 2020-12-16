@@ -65,7 +65,7 @@ describe('InsertAction', () => {
     expect(doc.getValue()).toBe(value);
     expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
   });
-  it("doesn't add a newline after when all white space after the curosr", () => {
+  it("doesn't add a newline after when all white space after the cursor", () => {
     const input = ['$$', 'x^2 + 1|', '$$'].join('\n');
     const expected = [
       '$$',
@@ -127,6 +127,32 @@ describe('ChangeAction', () => {
     const expected = [
       '$$\\begin{equation}',
       '|x^2 + 1',
+      '\\end{equation}$$',
+    ].join('\n');
+
+    const { value, cursor } = valueAndCursor(expected);
+    const doc = runAction(input, ChangeAction);
+    expect(doc.getValue()).toBe(value);
+    expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
+  });
+
+  it('wraps the whole block when not enclosed and after another environment', () => {
+    const input = [
+      '$$',
+      'x^2 + 1',
+      '= \\begin{pmatrix}',
+      '1 & 0',
+      '\\end{pmatrix}',
+      '| - 3',
+      '$$',
+    ].join('\n');
+    const expected = [
+      '$$\\begin{equation}',
+      'x^2 + 1',
+      '= \\begin{pmatrix}',
+      '1 & 0',
+      '\\end{pmatrix}',
+      '| - 3',
       '\\end{equation}$$',
     ].join('\n');
 

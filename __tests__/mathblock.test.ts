@@ -4,10 +4,50 @@ import { Environment } from '../src/environment';
 
 describe('MathBlock', () => {
   describe('getEnclosingEnvironment', () => {
-    it('returns undefined if no enclosing environment', () => {
-      const doc = fromString('$$x^2|=2$$');
-      const block = new MathBlock(doc, doc.getCursor());
-      expect(block.getEnclosingEnvironment(doc.getCursor())).toBeUndefined();
+    describe('when no enclosing environment', () => {
+      it('returns undefined', () => {
+        const doc = fromString('$$x^2|=2$$');
+        const block = new MathBlock(doc, doc.getCursor());
+        expect(block.getEnclosingEnvironment(doc.getCursor())).toBeUndefined();
+      });
+
+      it('returns undefined when after a top level environment', () => {
+        const doc = fromString(
+          [
+            '$$',
+            'x^2 + 1',
+            '= \\begin{pmatrix}',
+            '1 & 0',
+            '\\end{pmatrix}',
+            '| - 3',
+            '$$',
+          ].join('\n'),
+        );
+        const block = new MathBlock(doc, doc.getCursor());
+        expect(() => {
+          const actual = block.getEnclosingEnvironment(doc.getCursor());
+          expect(actual).toBeUndefined();
+        }).not.toThrow();
+      });
+
+      it('returns undefined when before a top level environment', () => {
+        const doc = fromString(
+          [
+            '$$',
+            'x^2 + 1|',
+            '= \\begin{pmatrix}',
+            '1 & 0',
+            '\\end{pmatrix}',
+            '- 3',
+            '$$',
+          ].join('\n'),
+        );
+        const block = new MathBlock(doc, doc.getCursor());
+        expect(() => {
+          const actual = block.getEnclosingEnvironment(doc.getCursor());
+          expect(actual).toBeUndefined();
+        }).not.toThrow();
+      });
     });
 
     describe('returns the nearest enclosing environment', () => {
@@ -28,7 +68,7 @@ describe('MathBlock', () => {
         expect((env as Environment).name).toBe('gathered');
       });
 
-      test('when in that block contains another', () => {
+      test('when in block that contains another', () => {
         const doc = fromString(
           [
             '$$\\begin{equation}|',
