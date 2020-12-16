@@ -1,62 +1,58 @@
-import { App, Modal, TextComponent } from 'obsidian';
+import { App, FuzzySuggestModal } from 'obsidian';
+import { LatexEnvironmentsSettings } from './settings';
 
-export class EnvModal extends Modal {
-  private submitted = false;
+export class EnvModal extends FuzzySuggestModal<string> {
+  private matched: boolean = false;
+  static ENVIRONMENTS = ['equation', 'multline'];
   constructor(
     app: App,
-    private name: string,
-    private readonly resolve: (name: string) => void,
-    private readonly reject: () => void,
+    private readonly settings: LatexEnvironmentsSettings,
+    private readonly name: string,
+    private readonly callback: (name: string) => void,
   ) {
     super(app);
+    this.setInstructions([
+      { command: '↑↓', purpose: 'to navigate' },
+      { command: '↵', purpose: 'to select' },
+      { command: 'esc', purpose: 'to dismiss' },
+    ]);
+    this.setPlaceholder('environment name');
   }
 
-  onOpen(): void {
-    const { contentEl, containerEl } = this;
-    const title = containerEl.find('.modal-title');
-    title.innerText = 'Environment Name';
-    new TextComponent(contentEl).then((textEl) => {
-      textEl.setValue(this.name).onChange((name) => (this.name = name));
-      const { inputEl } = textEl;
-      inputEl.className = 'prompt-input';
-      inputEl.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-          this.submit();
-        }
-      });
-      inputEl.focus();
-      inputEl.select();
-    });
-    contentEl.createEl('div', { cls: 'prompt-instructions' }, (el) => {
-      el.createEl('div', { cls: 'prompt-instruction' }, (div) => {
-        div.createEl('span', { cls: 'prompt-instruction-command' }).innerText =
-          '↵';
-        div.createEl('span').innerText = 'to submit';
-      });
-      el.createEl('div', { cls: 'prompt-instruction' }, (div) => {
-        div.createEl('span', {
-          cls: 'prompt-instruction-command',
-        }).innerText = 'esc';
-        div.createEl('span').innerText = 'to cancel';
-      });
-    });
+  public getItems(): string[] {
+    return Array.from(
+      new Set(
+        [this.settings.defaultEnvironment].concat(
+          this.settings.customEnvironments,
+          EnvModal.ENVIRONMENTS,
+        ),
+      ),
+    );
   }
 
-  private submit(): void {
-    this.submitted = true;
-    this.resolve(this.name);
-    this.close();
+  public getItemText(item: string): string {
+    this.matched = true;
+    return item;
   }
 
-  onClose(): void {
-    const { contentEl } = this;
-    contentEl.empty();
-    if (!this.submitted) this.reject();
+  public onNoSuggestion(): void {
+    this.matched = false;
   }
 
-  static async promise(app: App, defaultName: string): Promise<string> {
-    return await new Promise<string>((resolve, reject) => {
-      new EnvModal(app, defaultName, resolve, reject).open();
-    });
+  public onChooseItem(item: string, _evt: MouseEvent | KeyboardEvent): void {
+    if (this.matched) {
+      this.callback(item);
+    } else {
+      this.callback(this.inputEl.value);
+    }
+  }
+
+  static callback(
+    app: App,
+    settings: LatexEnvironmentsSettings,
+    defaultName: string,
+    call: (name: string) => void,
+  ): void {
+    new EnvModal(app, settings, defaultName, call).open();
   }
 }
