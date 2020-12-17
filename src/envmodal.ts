@@ -1,9 +1,9 @@
 import { App, FuzzySuggestModal } from 'obsidian';
 import { LatexEnvironmentsSettings } from './settings';
+import { DEFAULT_ENVIRONMENTS } from './environmentNames';
 
 export class EnvModal extends FuzzySuggestModal<string> {
   private matched: boolean = false;
-  static ENVIRONMENTS = ['equation', 'multline'];
   constructor(
     app: App,
     private readonly settings: LatexEnvironmentsSettings,
@@ -24,7 +24,7 @@ export class EnvModal extends FuzzySuggestModal<string> {
       new Set(
         [this.settings.defaultEnvironment].concat(
           this.settings.customEnvironments,
-          EnvModal.ENVIRONMENTS,
+          DEFAULT_ENVIRONMENTS,
         ),
       ),
     );
