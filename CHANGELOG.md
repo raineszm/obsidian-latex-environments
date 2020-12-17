@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/raineszm/obsidian-latex-environments/compare/0.2.0...0.2.1) (2020-12-17)
+
+
+### Features
+
+* **completion:** provide a more complete list of support mathjax environment names ([c0a98d5](https://github.com/raineszm/obsidian-latex-environments/commit/c0a98d537736cf5b0e2be2c2c6865a5ab5341390))
+
 ## [0.2.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.1.3...0.2.0) (2020-12-16)
 
 
