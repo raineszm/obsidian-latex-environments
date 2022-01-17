@@ -2,6 +2,7 @@ import { Action } from './action';
 import { MathBlock } from '../mathblock';
 import { Environment } from '../environment';
 import { WrapAction } from './wrapAction';
+import { EditorTransaction } from 'obsidian';
 
 export class ChangeAction extends Action {
   private current: Environment | undefined;
@@ -27,7 +28,11 @@ export class ChangeAction extends Action {
     return this;
   }
 
-  execute(envName: string): void {
-    if (this.current !== undefined) this.current.replace(envName);
+  transaction(envName: string): EditorTransaction {
+    if (this.current !== undefined) {
+      this.current.replace(envName);
+      return this.current.transaction;
+    }
+    return {};
   }
 }

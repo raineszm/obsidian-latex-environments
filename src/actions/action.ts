@@ -1,9 +1,9 @@
-import CodeMirror from 'codemirror';
+import { Editor, EditorTransaction } from 'obsidian';
 
 export abstract class Action {
-  constructor(public doc: CodeMirror.Doc) {}
+  constructor(public doc: Editor) {}
   abstract prepare(): Action;
-  abstract execute(envName: string): void;
+  abstract transaction(envName: string): EditorTransaction;
   public suggestName(): string | undefined {
     return undefined;
   }

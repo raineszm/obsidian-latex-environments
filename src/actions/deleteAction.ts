@@ -1,6 +1,7 @@
 import { Action } from './action';
 import { MathBlock } from '../mathblock';
 import { Environment } from '../environment';
+import { EditorTransaction } from 'obsidian';
 
 export class DeleteAction extends Action {
   private current: Environment | undefined;
@@ -16,7 +17,11 @@ export class DeleteAction extends Action {
     return this;
   }
 
-  execute(_envName: string): void {
-    if (this.current !== undefined) this.current.unwrap();
+  transaction(_envName: string): EditorTransaction {
+    if (this.current !== undefined) {
+      this.current.unwrap();
+      return this.current.transaction;
+    }
+    return {};
   }
 }

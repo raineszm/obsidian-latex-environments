@@ -1,26 +1,25 @@
-import CodeMirror from 'codemirror';
 import { Environment, PosRange } from './environment';
+import { Editor, EditorPosition } from 'obsidian';
+import { SearchCursor } from './search';
 
 export class MathBlock {
-  readonly startPosition: CodeMirror.Position;
-  readonly endPosition: CodeMirror.Position;
-  public doc: CodeMirror.Doc;
+  readonly startPosition: EditorPosition;
+  readonly endPosition: EditorPosition;
+  public doc: Editor;
 
-  constructor(doc: CodeMirror.Doc, cursor: CodeMirror.Position) {
-    const searchCursor = doc.getSearchCursor('$$', cursor);
-    this.startPosition =
-      searchCursor.findPrevious() !== false
-        ? searchCursor.to()
-        : { line: doc.firstLine(), ch: 0 };
-    this.endPosition =
-      searchCursor.findNext() !== false
-        ? searchCursor.from()
-        : { line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length - 1 };
+  constructor(doc: Editor, cursor: EditorPosition) {
     this.doc = doc;
+    const searchCursor = new SearchCursor(this.doc, '$$', cursor);
+    this.startPosition = searchCursor.findPrevious()
+      ? searchCursor.to()
+      : doc.offsetToPos(1);
+    this.endPosition = searchCursor.findNext()
+      ? searchCursor.from()
+      : { line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length - 1 };
   }
 
   public getEnclosingEnvironment(
-    cursor: CodeMirror.Position,
+    cursor: EditorPosition,
   ): Environment | undefined {
     const beginEnds = new BeginEnds(
       this.doc,
@@ -85,13 +84,11 @@ export class MathBlock {
     return new Environment(this.doc, start.name, start.pos, end.pos);
   }
 
-  public static isMathMode(
-    cursor: CodeMirror.Position,
-    editor: CodeMirror.Editor,
-  ): boolean {
-    const token = editor.getTokenAt(cursor);
-    const state = token.state;
-    return state.hmdInnerStyle === 'math';
+  public static isMathMode(cursor: EditorPosition, editor: Editor): boolean {
+    // const token = editor.getTokenAt(cursor);
+    // const state = token.state;
+    // return state.hmdInnerStyle === 'math';
+    return true;
   }
 }
 
@@ -103,11 +100,11 @@ interface BeginEnd {
 
 class BeginEnds implements IterableIterator<BeginEnd> {
   private readonly openEnvs: BeginEnd[] = [];
-  private search: CodeMirror.SearchCursor;
+  private search: SearchCursor;
   constructor(
-    readonly doc: CodeMirror.Doc,
-    readonly start: CodeMirror.Position,
-    readonly end: CodeMirror.Position,
+    readonly doc: Editor,
+    readonly start: EditorPosition,
+    readonly end: EditorPosition,
   ) {
     this.search = this.getEnvCursor(this.start);
   }
@@ -116,8 +113,8 @@ class BeginEnds implements IterableIterator<BeginEnd> {
     this.search = this.getEnvCursor(this.start);
   }
 
-  private getEnvCursor(start: CodeMirror.Position): CodeMirror.SearchCursor {
-    return this.doc.getSearchCursor(/\\(begin|end){\s*([^}]+)\s*}/m, start);
+  private getEnvCursor(start: EditorPosition): SearchCursor {
+    return new SearchCursor(this.doc, /\\(begin|end){\s*([^}]+)\s*}/m, start);
   }
 
   public get isOpen(): boolean {
@@ -134,8 +131,8 @@ class BeginEnds implements IterableIterator<BeginEnd> {
     const to = this.search.to();
 
     if (
-      match === true ||
-      match === false ||
+      match ||
+      !match ||
       to.line > this.end.line ||
       (to.line === this.end.line && to.ch > this.end.ch)
     ) {
