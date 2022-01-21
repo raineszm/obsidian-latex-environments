@@ -1,13 +1,9 @@
-import {
-  Editor,
-  EditorChange,
-  EditorPosition,
-  EditorTransaction,
-} from 'obsidian';
+import { Editor, EditorPosition, EditorTransaction } from 'obsidian';
+import { Change } from './change';
 
 export interface PosRange {
-  from: EditorPosition;
-  to: EditorPosition;
+  from: number;
+  to: number;
 }
 
 const BEGIN_LENGTH = 8;
@@ -15,19 +11,19 @@ const END_LENGTH = 6;
 
 export class Environment {
   constructor(
-    public doc: Editor,
+    public text: string,
     private _name: string,
     private _start: PosRange,
     private _end: PosRange,
-    changes?: EditorChange[],
-    cursor?: EditorPosition,
+    changes?: Change[],
+    cursor?: number,
   ) {
     this._changes = changes ?? [];
     this._cursor = cursor;
   }
 
-  private readonly _changes: EditorChange[];
-  private _cursor?: EditorPosition;
+  private readonly _changes: Change[];
+  private _cursor?: number;
 
   public get name(): string {
     return this._name;
@@ -49,26 +45,21 @@ export class Environment {
     return `\\end{${this._name}}`;
   }
 
-  public get transaction(): EditorTransaction {
+  public transaction(editor: Editor): EditorTransaction {
     return {
-      changes: this._changes,
-      selection: this._cursor == null ? undefined : { from: this._cursor },
+      changes: this._changes.map((x) => x.toEditorChange(editor)),
+      selection:
+        this._cursor == null
+          ? undefined
+          : { from: editor.offsetToPos(this._cursor) },
     };
   }
 
-  private replaceRange(
-    text: string,
-    from: EditorPosition,
-    to?: EditorPosition,
-  ): void {
-    this._changes.push({
-      text,
-      from,
-      to,
-    });
+  private replaceRange(text: string, from: number, to?: number): void {
+    this._changes.push(new Change(text, from, to));
   }
 
-  private setCursor(cursor: EditorPosition): Environment {
+  private setCursor(cursor: number): Environment {
     this._cursor = cursor;
     return this;
   }
@@ -81,14 +72,8 @@ export class Environment {
     this._name = envName;
     this.replaceRange(this.beginString, this.start.from, this.start.to);
     this.replaceRange(this.endString, this.end.from, this.end.to);
-    this._start.to = {
-      line: this.start.from.line,
-      ch: this.start.from.ch + this.beginString.length,
-    };
-    this._end.to = {
-      line: this.end.from.line,
-      ch: this.end.from.ch + this.endString.length,
-    };
+    this._start.to = this.start.from + this.beginString.length;
+    this._end.to = this.end.from + this.endString.length;
     return this;
   }
 
@@ -97,7 +82,7 @@ export class Environment {
   }
 
   private static newRange(
-    cursor: EditorPosition,
+    cursor: number,
     envName: string,
     lineOffset: number,
     chOffset: number,
@@ -116,12 +101,12 @@ export class Environment {
 
   public static create(
     envName: string,
-    doc: Editor,
-    cursor: EditorPosition,
+    text: string,
+    cursor: number,
   ): Environment {
     const newLine = nextLine(cursor, true);
     const newEnvironment = new Environment(
-      doc,
+      text,
       envName,
       Environment.newRange(newLine, envName, 0, BEGIN_LENGTH),
       Environment.newRange(newLine, envName, 2, END_LENGTH),
@@ -141,9 +126,9 @@ export class Environment {
 
   public static wrap(
     envName: string,
-    doc: Editor,
-    from: EditorPosition,
-    to: EditorPosition,
+    text: string,
+    from: number,
+    to: number,
     outerPad = '\n',
   ): Environment {
     const newEnvironment = new Environment(

@@ -1,28 +1,22 @@
-import { Environment, PosRange } from './environment';
-import { Editor, EditorPosition } from 'obsidian';
+import { Environment } from './environment';
 import { SearchCursor } from './search';
+import { Editor } from 'obsidian';
 
 export class MathBlock {
-  readonly startPosition: EditorPosition;
-  readonly endPosition: EditorPosition;
-  public doc: Editor;
+  readonly startPosition: number;
+  readonly endPosition: number;
 
-  constructor(doc: Editor, cursor: EditorPosition) {
-    this.doc = doc;
-    const searchCursor = new SearchCursor(this.doc, '$$', cursor);
-    this.startPosition = searchCursor.findPrevious()
-      ? searchCursor.to()
-      : doc.offsetToPos(1);
+  constructor(public readonly text: string, cursor: number) {
+    const searchCursor = new SearchCursor(text, '$$', cursor);
+    this.startPosition = searchCursor.findPrevious() ? searchCursor.to() : 0;
     this.endPosition = searchCursor.findNext()
       ? searchCursor.from()
-      : { line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length - 1 };
+      : text.length;
   }
 
-  public getEnclosingEnvironment(
-    cursor: EditorPosition,
-  ): Environment | undefined {
+  public getEnclosingEnvironment(cursor: number): Environment | undefined {
     const beginEnds = new BeginEnds(
-      this.doc,
+      this.text,
       this.startPosition,
       this.endPosition,
     );
@@ -32,28 +26,14 @@ export class MathBlock {
       throw new Error('unclosed environments in block');
     }
     const start = environments
-      .filter((env) => {
-        const from = env.pos.from;
-        return (
-          env.type === 'begin' &&
-          (from.line < cursor.line ||
-            (from.line === cursor.line && from.ch <= cursor.ch))
-        );
-      })
+      .filter((env) => env.type === 'begin' && env.from < cursor)
       .pop();
 
     if (start === undefined) {
       return undefined;
     }
 
-    const startTo = start.pos.to;
-    const after = environments.filter((env) => {
-      const from = env.pos.from;
-      return (
-        from.line > startTo.line ||
-        (from.line === startTo.line && from.ch > startTo.ch)
-      );
-    });
+    const after = environments.filter((env) => env.from > start.to);
 
     let open = 1;
     let end: BeginEnd | undefined;
@@ -73,18 +53,14 @@ export class MathBlock {
       throw new Error('current environment is never closed');
     }
 
-    const endTo = end.pos.to;
-    if (
-      endTo.line < cursor.line ||
-      (endTo.line === cursor.line && endTo.ch < cursor.ch)
-    ) {
+    if (end.to < cursor) {
       return undefined;
     }
 
-    return new Environment(this.doc, start.name, start.pos, end.pos);
+    return new Environment(this.text, start.name, start, end);
   }
 
-  public static isMathMode(cursor: EditorPosition, editor: Editor): boolean {
+  public static isMathMode(cursor: number, editor: Editor): boolean {
     // const token = editor.getTokenAt(cursor);
     // const state = token.state;
     // return state.hmdInnerStyle === 'math';
@@ -95,16 +71,17 @@ export class MathBlock {
 interface BeginEnd {
   name: string;
   type: 'begin' | 'end';
-  pos: PosRange;
+  from: number;
+  to: number;
 }
 
 class BeginEnds implements IterableIterator<BeginEnd> {
   private readonly openEnvs: BeginEnd[] = [];
   private search: SearchCursor;
   constructor(
-    readonly doc: Editor,
-    readonly start: EditorPosition,
-    readonly end: EditorPosition,
+    readonly text: string,
+    readonly start: number,
+    readonly end: number,
   ) {
     this.search = this.getEnvCursor(this.start);
   }
@@ -113,8 +90,8 @@ class BeginEnds implements IterableIterator<BeginEnd> {
     this.search = this.getEnvCursor(this.start);
   }
 
-  private getEnvCursor(start: EditorPosition): SearchCursor {
-    return new SearchCursor(this.doc, /\\(begin|end){\s*([^}]+)\s*}/m, start);
+  private getEnvCursor(start: number): SearchCursor {
+    return new SearchCursor(this.text, /\\(begin|end){\s*([^}]+)\s*}/m, start);
   }
 
   public get isOpen(): boolean {
@@ -130,12 +107,7 @@ class BeginEnds implements IterableIterator<BeginEnd> {
     const match = this.search.findNext();
     const to = this.search.to();
 
-    if (
-      match ||
-      !match ||
-      to.line > this.end.line ||
-      (to.line === this.end.line && to.ch > this.end.ch)
-    ) {
+    if (match || !match || to > this.end) {
       return { done: true, value: null };
     }
 
@@ -144,10 +116,8 @@ class BeginEnds implements IterableIterator<BeginEnd> {
         const current: BeginEnd = {
           name: match[2],
           type: 'begin',
-          pos: {
-            from: this.search.from(),
-            to: this.search.to(),
-          },
+          from: this.search.from(),
+          to: this.search.to(),
         };
         this.openEnvs.push(current);
         return {
@@ -168,10 +138,8 @@ class BeginEnds implements IterableIterator<BeginEnd> {
           value: {
             name: match[2],
             type: 'end',
-            pos: {
-              from: this.search.from(),
-              to: this.search.to(),
-            },
+            from: this.search.from(),
+            to: this.search.to(),
           },
         };
       }

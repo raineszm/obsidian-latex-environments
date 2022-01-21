@@ -19,11 +19,11 @@ export class WrapAction extends Action {
   transaction(envName: string): EditorTransaction {
     const newEnvironment = Environment.wrap(
       envName,
-      this.doc,
-      this.from,
-      this.to,
+      this.doc.getValue(),
+      this.doc.posToOffset(this.from),
+      this.doc.posToOffset(this.to),
       this.addWhitespace ? '\n' : '',
     );
-    return newEnvironment.transaction;
+    return newEnvironment.transaction(this.doc);
   }
 }

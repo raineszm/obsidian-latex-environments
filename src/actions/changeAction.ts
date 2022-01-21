@@ -13,15 +13,15 @@ export class ChangeAction extends Action {
   }
 
   prepare(): Action {
-    const cursor = this.doc.getCursor();
-    const block = new MathBlock(this.doc, cursor);
+    const cursor = this.doc.posToOffset(this.doc.getCursor());
+    const block = new MathBlock(this.doc.getValue(), cursor);
     this.current = block.getEnclosingEnvironment(cursor);
     if (this.current === undefined) {
       return new WrapAction(
         this.doc,
-        block.startPosition,
-        block.endPosition,
-        block.startPosition.line === block.endPosition.line,
+        this.doc.offsetToPos(block.startPosition),
+        this.doc.offsetToPos(block.endPosition),
+        block.startPosition === block.endPosition,
       );
     }
     this.name = this.current.name;
@@ -31,7 +31,7 @@ export class ChangeAction extends Action {
   transaction(envName: string): EditorTransaction {
     if (this.current !== undefined) {
       this.current.replace(envName);
-      return this.current.transaction;
+      return this.current.transaction(this.doc);
     }
     return {};
   }

@@ -18,9 +18,9 @@ export class InsertAction extends Action {
   transaction(envName: string): EditorTransaction {
     const environment = Environment.create(
       envName,
-      this.doc,
-      this.doc.getCursor(),
+      this.doc.getValue(),
+      this.doc.posToOffset(this.doc.getCursor()),
     );
-    return environment.transaction;
+    return environment.transaction(this.doc);
   }
 }
