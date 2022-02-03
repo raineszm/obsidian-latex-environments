@@ -7,11 +7,12 @@ export class MathBlock {
   readonly endPosition: number;
 
   constructor(public readonly text: string, cursor: number) {
-    const searchCursor = new SearchCursor(text, '$$', cursor);
-    this.startPosition = searchCursor.findPrevious() ? searchCursor.to() : 0;
-    this.endPosition = searchCursor.findNext()
-      ? searchCursor.from()
-      : text.length;
+    const searchCursor = new SearchCursor(text, '\\$\\$', cursor);
+    this.startPosition =
+      searchCursor.findPrevious() != null ? searchCursor.to() : 0;
+    searchCursor.reset();
+    this.endPosition =
+      searchCursor.findNext() != null ? searchCursor.from() : text.length;
   }
 
   public getEnclosingEnvironment(cursor: number): Environment | undefined {
@@ -57,10 +58,15 @@ export class MathBlock {
       return undefined;
     }
 
-    return new Environment(this.text, start.name, start, end);
+    return {
+      name: start.name,
+      begin: start,
+      end,
+      contents: this.text,
+    };
   }
 
-  public static isMathMode(cursor: number, editor: Editor): boolean {
+  public static isMathMode(_cursor: number, _editor: Editor): boolean {
     // const token = editor.getTokenAt(cursor);
     // const state = token.state;
     // return state.hmdInnerStyle === 'math';
@@ -91,7 +97,11 @@ class BeginEnds implements IterableIterator<BeginEnd> {
   }
 
   private getEnvCursor(start: number): SearchCursor {
-    return new SearchCursor(this.text, /\\(begin|end){\s*([^}]+)\s*}/m, start);
+    return new SearchCursor(
+      this.text,
+      /\\(?<beginEnd>begin|end){\s*(?<name>[^}]+)\s*}/m,
+      start,
+    );
   }
 
   public get isOpen(): boolean {
@@ -107,14 +117,14 @@ class BeginEnds implements IterableIterator<BeginEnd> {
     const match = this.search.findNext();
     const to = this.search.to();
 
-    if (match || !match || to > this.end) {
+    if (match?.groups == null || to > this.end) {
       return { done: true, value: null };
     }
 
-    switch (match[1]) {
+    switch (match.groups.beginEnd) {
       case 'begin': {
         const current: BeginEnd = {
-          name: match[2],
+          name: match.groups.name,
           type: 'begin',
           from: this.search.from(),
           to: this.search.to(),
@@ -130,13 +140,13 @@ class BeginEnds implements IterableIterator<BeginEnd> {
         if (current === undefined) {
           throw new Error('closing environment which was never opened');
         }
-        if (current.name !== match[2]) {
+        if (current.name !== match.groups.name) {
           throw new Error('environment not closed properly');
         }
         return {
           done: false,
           value: {
-            name: match[2],
+            name: match.groups.name,
             type: 'end',
             from: this.search.from(),
             to: this.search.to(),
@@ -144,6 +154,6 @@ class BeginEnds implements IterableIterator<BeginEnd> {
         };
       }
     }
-    throw new Error(`regex returned unexpected result ${match[1] as string}`);
+    throw new Error(`regex returned unexpected result ${match[1]}`);
   }
 }

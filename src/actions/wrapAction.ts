@@ -1,14 +1,9 @@
 import { Action } from './action';
-import { Environment } from '../environment';
-import { Editor, EditorPosition, EditorTransaction } from 'obsidian';
+import { newEnvironment } from '../environment';
+import { Editor, EditorTransaction } from 'obsidian';
 
 export class WrapAction extends Action {
-  constructor(
-    doc: Editor,
-    public readonly from: EditorPosition,
-    public readonly to: EditorPosition,
-    public readonly addWhitespace = true,
-  ) {
+  constructor(doc: Editor, public readonly addWhitespace = true) {
     super(doc);
   }
 
@@ -17,13 +12,10 @@ export class WrapAction extends Action {
   }
 
   transaction(envName: string): EditorTransaction {
-    const newEnvironment = Environment.wrap(
+    return newEnvironment(
       envName,
-      this.doc.getValue(),
-      this.doc.posToOffset(this.from),
-      this.doc.posToOffset(this.to),
-      this.addWhitespace ? '\n' : '',
+      this.doc.getCursor(),
+      this.doc.getSelection(),
     );
-    return newEnvironment.transaction(this.doc);
   }
 }

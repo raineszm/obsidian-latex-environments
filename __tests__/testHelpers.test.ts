@@ -1,16 +1,14 @@
-import { fromString } from './codemirrorHelpers';
+import { fromString } from './testHelpers';
 
-describe('CodeMirror helpers', () => {
+describe('test helpers', () => {
   describe('fromString', () => {
     it('sets the cursor position', () => {
       const doc = fromString('$|$');
-      expect(doc.getCursor()).toStrictEqual(
-        expect.objectContaining({ line: 0, ch: 1 }),
-      );
+      expect(doc.cursor).toBe(1);
     });
     it('removes the cursor placeholder', () => {
       const doc = fromString('$|$');
-      expect(doc.getValue()).toBe('$$');
+      expect(doc.text).toBe('$$');
     });
     it('sets the document text', () => {
       const input = [
@@ -25,7 +23,7 @@ describe('CodeMirror helpers', () => {
       ].join('\n');
       const doc = fromString(input);
       const expected = input.replace('|', '');
-      expect(doc.getValue()).toBe(expected);
+      expect(doc.text).toBe(expected);
     });
 
     it('sets the selection', () => {
@@ -41,17 +39,11 @@ describe('CodeMirror helpers', () => {
       ];
       const input = lines.join('\n');
       const doc = fromString(input);
-      const expectedFrom = expect.objectContaining({
-        line: 2,
-        ch: lines[2].indexOf('|'),
-      });
-      const expectedTo = expect.objectContaining({
-        line: 4,
-        ch: lines[4].indexOf('|'),
-      });
-      expect(doc.somethingSelected()).toBeTruthy();
-      expect(doc.getCursor('from')).toStrictEqual(expectedFrom);
-      expect(doc.getCursor('to')).toStrictEqual(expectedTo);
+      const expectedFrom = input.indexOf('|');
+      const expectedTo = input.lastIndexOf('|') - 1;
+      // expect(doc.somethingSelected()).toBeTruthy();
+      expect(doc.selection.from).toStrictEqual(expectedFrom);
+      expect(doc.selection.to).toStrictEqual(expectedTo);
     });
   });
 });

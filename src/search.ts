@@ -2,42 +2,53 @@ export class SearchCursor {
   public readonly regex: RegExp;
   private _from: number;
   private _to: number;
+  private _caret: number;
 
   constructor(
     public text: string,
     regex: RegExp | String,
-    public readonly caret: number,
+    private readonly _originalCaret: number,
   ) {
     if (regex instanceof RegExp) {
       this.regex = regex;
     } else {
       this.regex = new RegExp(regex as string);
     }
-    this._from = caret;
-    this._to = caret;
+    this.reset();
   }
 
-  public findNext(): boolean {
-    const text = this.text.slice(this.caret);
+  public reset(): void {
+    this._from = this._originalCaret;
+    this._to = this._originalCaret;
+    this._caret = this._originalCaret;
+  }
+
+  public findNext(): RegExpMatchArray | undefined {
+    const text = this.text.slice(this._caret);
     const match = text.match(this.regex);
     if (match?.index == null) {
-      return false;
+      return undefined;
     }
-    this._from = this.caret + match.index;
-    this._to = this.caret + match.index + match[0].length;
-    return true;
+    this._from = this._caret + match.index;
+    this._to = this._caret + match.index + match[0].length;
+    this._caret = this._to;
+    return match;
   }
 
-  public findPrevious(): boolean {
-    const reverseRegex = new RegExp(this.regex.source, this.regex.flags + 'g');
-    const text = this.text.slice(this.caret);
-    const lastMatch = getLastMatch(reverseRegex, text);
-    if (lastMatch == null) {
-      return false;
+  public findPrevious(): RegExpMatchArray | undefined {
+    const reverseRegex = new RegExp(
+      `(?<full>${this.regex.source})(?!.*[\\r\\n]*.*\\k<full>)`,
+      this.regex.flags,
+    );
+    const text = this.text.slice(0, this._caret);
+    const lastMatch = text.match(reverseRegex);
+    if (lastMatch?.index == null || lastMatch?.groups == null) {
+      return undefined;
     }
-    this._from = lastMatch.index + 1 + 1;
-    this._to = lastMatch.index + lastMatch.text.length + 1;
-    return true;
+    this._from = lastMatch.index;
+    this._to = lastMatch.index + lastMatch.groups.full.length;
+    this._caret = this._from;
+    return lastMatch;
   }
 
   public to(): number {
@@ -49,28 +60,21 @@ export class SearchCursor {
   }
 }
 
-interface Match {
-  index: number;
-  text: string;
-}
-
-function getLastMatch(r: RegExp, s: string): Match | undefined {
-  const matches = Array.from(matchAll(r, s));
-  const lastMatch = matches[matches.length - 1];
-  if (lastMatch == null) {
-    return undefined;
-  } else {
-    return {
-      index: lastMatch.index,
-      text: lastMatch[0],
-    };
-  }
-}
-
-function* matchAll(r: RegExp, s: string): Generator<RegExpExecArray> {
-  while (true) {
-    const match = r.exec(s);
-    if (match == null) return;
-    yield match;
-  }
-}
+// interface Match {
+//   index: number;
+//   text: string;
+// }
+//
+// function getLastMatch(r: RegExp, s: string): Match | undefined {
+//   s.match(r);
+//   const matches = Array.from(matchAll(r, s));
+//   const lastMatch = matches[matches.length - 1];
+//   if (lastMatch == null) {
+//     return undefined;
+//   } else {
+//     return {
+//       index: lastMatch.index,
+//       text: lastMatch[0],
+//     };
+//   }
+// }

@@ -45,7 +45,7 @@ export default class LatexEnvironments extends Plugin {
       const leaf = this.app.workspace.activeLeaf;
       if (leaf.view instanceof MarkdownView) {
         const editor = leaf.view.editor;
-        const cursor = editor.getCursor();
+        const cursor = editor.posToOffset(editor.getCursor());
 
         if (!MathBlock.isMathMode(cursor, editor)) {
           return false;

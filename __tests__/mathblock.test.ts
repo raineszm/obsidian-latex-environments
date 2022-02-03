@@ -1,4 +1,4 @@
-import { fromString } from './codemirrorHelpers';
+import { fromString } from './testHelpers';
 import { MathBlock } from '../src/mathblock';
 import { Environment } from '../src/environment';
 
@@ -7,8 +7,8 @@ describe('MathBlock', () => {
     describe('when no enclosing environment', () => {
       it('returns undefined', () => {
         const doc = fromString('$$x^2|=2$$');
-        const block = new MathBlock(doc, doc.getCursor());
-        expect(block.getEnclosingEnvironment(doc.getCursor())).toBeUndefined();
+        const block = new MathBlock(doc.text, doc.cursor);
+        expect(block.getEnclosingEnvironment(doc.cursor)).toBeUndefined();
       });
 
       it('returns undefined when after a top level environment', () => {
@@ -23,9 +23,9 @@ describe('MathBlock', () => {
             '$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
+        const block = new MathBlock(doc.text, doc.cursor);
         expect(() => {
-          const actual = block.getEnclosingEnvironment(doc.getCursor());
+          const actual = block.getEnclosingEnvironment(doc.cursor);
           expect(actual).toBeUndefined();
         }).not.toThrow();
       });
@@ -42,9 +42,9 @@ describe('MathBlock', () => {
             '$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
+        const block = new MathBlock(doc.text, doc.cursor);
         expect(() => {
-          const actual = block.getEnclosingEnvironment(doc.getCursor());
+          const actual = block.getEnclosingEnvironment(doc.cursor);
           expect(actual).toBeUndefined();
         }).not.toThrow();
       });
@@ -62,8 +62,8 @@ describe('MathBlock', () => {
             '\\end{equation}$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
-        const env = block.getEnclosingEnvironment(doc.getCursor());
+        const block = new MathBlock(doc.text, doc.cursor);
+        const env = block.getEnclosingEnvironment(doc.cursor);
         expect(env).toBeTruthy();
         expect((env as Environment).name).toBe('gathered');
       });
@@ -79,8 +79,8 @@ describe('MathBlock', () => {
             '\\end{equation}$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
-        const env = block.getEnclosingEnvironment(doc.getCursor());
+        const block = new MathBlock(doc.text, doc.cursor);
+        const env = block.getEnclosingEnvironment(doc.cursor);
         expect(env).toBeTruthy();
         expect((env as Environment).name).toBe('equation');
       });
@@ -96,16 +96,18 @@ describe('MathBlock', () => {
           '\\end{equation}$$',
         ].join('\n'),
       );
-      const block = new MathBlock(doc, doc.getCursor());
-      const env = block.getEnclosingEnvironment(doc.getCursor());
+      const block = new MathBlock(doc.text, doc.cursor);
+      const env = block.getEnclosingEnvironment(doc.cursor);
       expect(env).toBeTruthy();
       if (env !== undefined) {
         // eslint-disable-next-line jest/no-conditional-expect
-        expect(doc.getRange(env.start.from, env.start.to)).toBe(
+        expect(doc.text.slice(env.begin.from, env.begin.to)).toBe(
           '\\begin{equation}',
         );
         // eslint-disable-next-line jest/no-conditional-expect
-        expect(doc.getRange(env.end.from, env.end.to)).toBe('\\end{equation}');
+        expect(doc.text.slice(env.end.from, env.end.to)).toBe(
+          '\\end{equation}',
+        );
       }
     });
     describe('errors on unpaired begin or end', () => {
@@ -119,8 +121,8 @@ describe('MathBlock', () => {
             '\\end{gathered}$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
-        expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
+        const block = new MathBlock(doc.text, doc.cursor);
+        expect(() => block.getEnclosingEnvironment(doc.cursor)).toThrow(
           'closed',
         );
       });
@@ -136,8 +138,8 @@ describe('MathBlock', () => {
             '\\end{equation}$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
-        expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
+        const block = new MathBlock(doc.text, doc.cursor);
+        expect(() => block.getEnclosingEnvironment(doc.cursor)).toThrow(
           'closing',
         );
       });
@@ -152,8 +154,8 @@ describe('MathBlock', () => {
             '\\end{equation}$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
-        expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
+        const block = new MathBlock(doc.text, doc.cursor);
+        expect(() => block.getEnclosingEnvironment(doc.cursor)).toThrow(
           'closed',
         );
       });
@@ -169,8 +171,8 @@ describe('MathBlock', () => {
             '\\end{equation}$$',
           ].join('\n'),
         );
-        const block = new MathBlock(doc, doc.getCursor());
-        expect(() => block.getEnclosingEnvironment(doc.getCursor())).toThrow(
+        const block = new MathBlock(doc.text, doc.cursor);
+        expect(() => block.getEnclosingEnvironment(doc.cursor)).toThrow(
           'closed',
         );
       });
