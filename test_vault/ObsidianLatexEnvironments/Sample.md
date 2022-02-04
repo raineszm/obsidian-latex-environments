@@ -1,9 +1,7 @@
 # Sample
-$$ \begin{equation}
-
-
-
-\end{equation}$$
+$$
+x^2
+$$
 
 $$\begin{equation}
 x^2 = 1\\

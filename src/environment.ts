@@ -48,7 +48,14 @@ export function changeEnvironment(
   doc: Editor,
   name: string,
 ): EditorTransaction {
-  return newEnvironment(name, doc.getCursor(), environment.contents);
+  const change = {
+    text: `\\begin{${name}}${environment.contents}\\end{${name}}`,
+    from: doc.offsetToPos(environment.begin.from),
+    to: doc.offsetToPos(environment.end.to),
+  };
+  return {
+    changes: [change],
+  };
 }
 // function getPad(text: string): string {
 //   if (text.match(/^[ \t]*$/) !== null) {

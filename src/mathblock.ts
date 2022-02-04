@@ -62,7 +62,7 @@ export class MathBlock {
       name: start.name,
       begin: start,
       end,
-      contents: this.text,
+      contents: this.text.slice(start.to, end.from),
     };
   }
 
