@@ -56,6 +56,7 @@ export function changeEnvironment(
   };
   return {
     changes: [change],
+    selection: { from: doc.getCursor() },
   };
 }
 
