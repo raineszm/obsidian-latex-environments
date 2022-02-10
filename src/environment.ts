@@ -15,10 +15,11 @@ export interface Environment {
 export function newEnvironment(
   name: string,
   cursor: EditorPosition,
-  contents: string = '\n\n',
+  contents: string = '',
 ): EditorTransaction {
+  const pad = getPad(contents);
   return {
-    replaceSelection: `\\begin{${name}}\n${contents}\n\\end{${name}}`,
+    replaceSelection: `\\begin{${name}}${pad}${contents}${pad}\\end{${name}}`,
     selection: {
       from: {
         ch: 0,
@@ -57,9 +58,10 @@ export function changeEnvironment(
     changes: [change],
   };
 }
-// function getPad(text: string): string {
-//   if (text.match(/^[ \t]*$/) !== null) {
-//     return '';
-//   }
-//   return '\n';
-// }
+
+function getPad(text: string): string {
+  if (text.length > 0 && text.match(/^[ \t]*$/) != null) {
+    return '';
+  }
+  return '\n';
+}
