@@ -36,11 +36,12 @@ export function unwrapEnvironment(
   return {
     changes: [
       {
-        text: environment.contents,
+        text: trim(environment.contents),
         from: doc.offsetToPos(environment.begin.from),
         to: doc.offsetToPos(environment.end.to),
       },
     ],
+    selection: { from: doc.getCursor() },
   };
 }
 
@@ -65,4 +66,11 @@ function getPad(text: string): string {
     return '';
   }
   return '\n';
+}
+
+function trim(text: string): string {
+  if (text.length === 0) return text;
+  const start = text.startsWith('\n') ? 0 : 1;
+  const end = text.endsWith('\n') ? text.length - 1 : text.length;
+  return text.slice(start, end);
 }
