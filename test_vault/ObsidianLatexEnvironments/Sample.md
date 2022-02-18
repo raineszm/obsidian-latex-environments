@@ -12,3 +12,10 @@ $$\begin{pmatrix}
 1&0\\
 0&1
 \end{pmatrix}$$
+
+$$
+\begin{array}{l|c|r}
+1&2&3\\
+x&y&z
+\end{array}
+$$

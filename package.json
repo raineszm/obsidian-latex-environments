@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && cp manifest.json dist/",
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
     "release": "standard-version",

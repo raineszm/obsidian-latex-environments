@@ -70,7 +70,7 @@ function getPad(text: string): string {
 
 function trim(text: string): string {
   if (text.length === 0) return text;
-  const start = text.startsWith('\n') ? 0 : 1;
+  const start = text.startsWith('\n') ? 1 : 0;
   const end = text.endsWith('\n') ? text.length - 1 : text.length;
   return text.slice(start, end);
 }
