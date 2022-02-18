@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.2.1...0.3.0) (2022-02-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **codemirror:** Some behavior may differ from previous versions as the backend was completely rewritten. Fixes #17
+
+### Features
+
+* **codemirror:** port to using obsidian's codemirror version abstraction ([ab10739](https://github.com/raineszm/obsidian-latex-environments/commit/ab107390e0e2d3e520e40a5939d83fc5627bb6f6))
+
+
+### Bug Fixes
+
+* **cursor:** set cursor position when changing environment ([65bf772](https://github.com/raineszm/obsidian-latex-environments/commit/65bf7725fed81369f621b25bfdabe9d8b2d3cdfa))
+* **delete environment:** fix trimming of environment contents when deleting environment ([ac7dedc](https://github.com/raineszm/obsidian-latex-environments/commit/ac7dedc2f5b20afa50c11a4c319de6c39d0d0486))
+* **whitespace:** fix newlines when creating a new environment ([d08bc4a](https://github.com/raineszm/obsidian-latex-environments/commit/d08bc4a3181059b750cab505d2693894bcc758bf))
+* **whitespace:** remove extraneous whitespace when deleting and environment ([2320564](https://github.com/raineszm/obsidian-latex-environments/commit/2320564e606b3942a18d5f0fcd560e7b470230b2))
+
 ### [0.2.1](https://github.com/raineszm/obsidian-latex-environments/compare/0.2.0...0.2.1) (2020-12-17)
 
 
