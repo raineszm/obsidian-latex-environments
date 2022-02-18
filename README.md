@@ -7,7 +7,7 @@
 
 > Quickly insert and change latex environments within math blocks in Obsidian.
 
-**The internals have been rewritten for version 0.3.0. See [Version 0.3.0 rewrite](#Version-0.3.0-Rewrite)**
+**The internals have been rewritten for version 0.3.0. See Version 0.3.0 rewrite below.**
 
 ## Installation
 
@@ -64,7 +64,7 @@ Remove the innermost LaTeX environment enclosing the cursor.
 
 In order to support the Live Preview feature of obsidian the internals of this plugin needed to be rewritten.
 The aim is to leave functionality unaffected but there may be some differences from previous versions.
-Please file a bug report if you discover something that worked with 0.2.0 but not 0.3
+Please file a bug report if you discover something that worked with 0.2.0 but not 0.3.0
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
