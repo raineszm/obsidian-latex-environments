@@ -1,6 +1,5 @@
-import { MarkdownView, Notice, Plugin } from 'obsidian';
+import { MarkdownView, Notice, Plugin, Editor } from 'obsidian';
 import { ensureSettings, LatexEnvironmentsSettings } from './settings';
-import CodeMirror from 'codemirror';
 import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
 import { LatexEnvironmentsSettingTab } from './latexEnvironmentsSettingsTab';
@@ -40,13 +39,13 @@ export default class LatexEnvironments extends Plugin {
   }
 
   private mathModeCallback<A extends Action>(
-    ActionType: new (doc: CodeMirror.Doc) => A,
+    ActionType: new (doc: Editor) => A,
   ) {
     return (checking: boolean) => {
       const leaf = this.app.workspace.activeLeaf;
       if (leaf.view instanceof MarkdownView) {
-        const editor = leaf.view.sourceMode.cmEditor;
-        const cursor = editor.getCursor();
+        const editor = leaf.view.editor;
+        const cursor = editor.posToOffset(editor.getCursor());
 
         if (!MathBlock.isMathMode(cursor, editor)) {
           return false;
@@ -56,7 +55,7 @@ export default class LatexEnvironments extends Plugin {
           try {
             const action = new ActionType(editor.getDoc()).prepare();
             this.withPromptName(editor, action);
-          } catch (e) {
+          } catch (e: any) {
             /* eslint-disable-next-line no-new */
             new Notice(e.message);
           }
@@ -67,9 +66,9 @@ export default class LatexEnvironments extends Plugin {
     };
   }
 
-  private withPromptName(editor: CodeMirror.Editor, action: Action): void {
+  private withPromptName(editor: Editor, action: Action): void {
     const call = (envName: string): void => {
-      editor.operation(() => action.execute(envName));
+      editor.transaction(action.transaction(envName));
       editor.focus();
     };
 

@@ -1,27 +1,21 @@
 {
   "name": "obsidian-latex-environments",
-  "version": "0.2.1",
+  "version": "0.3.0-1",
   "description": "Quickly insert and change latex environments within math blocks in Obsidian.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && cp manifest.json dist/",
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
-    "commit": "git-cz",
     "release": "standard-version",
     "release:dryrun": "standard-version --dry-run",
-    "release:prerelease": "standard-version --skip.tag --skip.changelog --prerelease"
+    "release:prerelease": "standard-version --skip.tag --skip.changelog --prerelease",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.ts": "eslint --fix",
     "*.json": "prettier --write"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "standard-version": {
     "tag-prefix": "",
@@ -44,31 +38,28 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@types/codemirror": "^0.0.98",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^14.14.6",
-    "@typescript-eslint/eslint-plugin": "4",
-    "@typescript-eslint/parser": "^4.7.0",
-    "codemirror": "^5.58.2",
-    "commitizen": "^4.2.2",
-    "eslint": "7",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-config-standard-with-typescript": "^19.0.1",
-    "eslint-plugin-import": "2",
-    "eslint-plugin-jest": "^24.1.3",
-    "eslint-plugin-node": "11",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-promise": "4",
-    "eslint-plugin-standard": "4",
-    "husky": "^4.3.0",
-    "jest": "^26.6.3",
-    "lint-staged": "^10.5.1",
-    "prettier": "^2.1.2",
-    "standard-version": "^9.0.0",
-    "ts-jest": "^26.4.4",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^14.18.9",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
     "builtin-modules": "^3.2.0",
     "esbuild": "0.13.12",
-    "obsidian": "obsidianmd/obsidian-api#ea530cce1adaa33eb891f053a56a12fa8640b834",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-standard-with-typescript": "^19.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^24.7.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^4.1.0",
+    "husky": "^7.0.0",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.4",
+    "obsidian": "^0.11.13",
+    "prettier": "^2.5.1",
+    "standard-version": "^9.3.2",
+    "ts-jest": "^26.5.6",
     "tslib": "2.3.1",
     "typescript": "4.4.4"
   }

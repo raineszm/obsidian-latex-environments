@@ -7,6 +7,8 @@
 
 > Quickly insert and change latex environments within math blocks in Obsidian.
 
+**The internals have been rewritten for version 0.3.0. See Version 0.3.0 rewrite below.**
+
 ## Installation
 
 If you have Obsidian version 0.9.8 or greater:
@@ -46,7 +48,7 @@ Both commands will also query for the name of the environment.
 Insert a new LaTeX environment at the cursor.
 
 **With a selection** inserts a new LaTeX environment around the selection.
-
+0.
 
 #### Change Environment
 
@@ -58,6 +60,11 @@ Change the name of the surrounding LaTeX environment.
 
 Remove the innermost LaTeX environment enclosing the cursor.
 
+## Version 0.3.0 Rewrite 
+
+In order to support the Live Preview feature of obsidian the internals of this plugin needed to be rewritten.
+The aim is to leave functionality unaffected but there may be some differences from previous versions.
+Please file a bug report if you discover something that worked with 0.2.0 but not 0.3.0
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

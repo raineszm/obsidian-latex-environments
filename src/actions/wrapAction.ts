@@ -1,14 +1,9 @@
 import { Action } from './action';
-import * as CodeMirror from 'codemirror';
-import { Environment } from '../environment';
+import { newEnvironment } from '../environment';
+import { Editor, EditorTransaction } from 'obsidian';
 
 export class WrapAction extends Action {
-  constructor(
-    doc: CodeMirror.Doc,
-    public readonly from: CodeMirror.Position,
-    public readonly to: CodeMirror.Position,
-    public readonly addWhitespace = true,
-  ) {
+  constructor(doc: Editor, public readonly addWhitespace = true) {
     super(doc);
   }
 
@@ -16,13 +11,11 @@ export class WrapAction extends Action {
     return this;
   }
 
-  execute(envName: string): void {
-    Environment.wrap(
+  transaction(envName: string): EditorTransaction {
+    return newEnvironment(
       envName,
-      this.doc,
-      this.from,
-      this.to,
-      this.addWhitespace ? '\n' : '',
+      this.doc.getCursor(),
+      this.doc.getSelection(),
     );
   }
 }
