@@ -1,6 +1,5 @@
 import { MarkdownView, Notice, Plugin, Editor } from 'obsidian';
 import { ensureSettings, LatexEnvironmentsSettings } from './settings';
-import { MathBlock } from './mathblock';
 import { EnvModal } from './envmodal';
 import { LatexEnvironmentsSettingTab } from './latexEnvironmentsSettingsTab';
 import { InsertAction } from './actions/insertAction';
@@ -20,19 +19,19 @@ export default class LatexEnvironments extends Plugin {
     this.addCommand({
       id: 'insert-latex-env',
       name: 'Insert LaTeX environment',
-      checkCallback: this.mathModeCallback(InsertAction),
+      editorCallback: this.mathModeCallback(InsertAction),
     });
 
     this.addCommand({
       id: 'change-latex-env',
       name: 'Change LaTeX environment',
-      checkCallback: this.mathModeCallback(ChangeAction),
+      editorCallback: this.mathModeCallback(ChangeAction),
     });
 
     this.addCommand({
       id: 'delete-latex-env',
       name: 'Delete LaTeX environment',
-      checkCallback: this.mathModeCallback(DeleteAction),
+      editorCallback: this.mathModeCallback(DeleteAction),
     });
 
     this.addSettingTab(new LatexEnvironmentsSettingTab(this.app, this));
@@ -41,28 +40,14 @@ export default class LatexEnvironments extends Plugin {
   private mathModeCallback<A extends Action>(
     ActionType: new (doc: Editor) => A,
   ) {
-    return (checking: boolean) => {
-      const leaf = this.app.workspace.activeLeaf;
-      if (leaf.view instanceof MarkdownView) {
-        const editor = leaf.view.editor;
-        const cursor = editor.posToOffset(editor.getCursor());
-
-        if (!MathBlock.isMathMode(cursor, editor)) {
-          return false;
-        }
-
-        if (!checking) {
-          try {
-            const action = new ActionType(editor.getDoc()).prepare();
-            this.withPromptName(editor, action);
-          } catch (e: any) {
-            /* eslint-disable-next-line no-new */
-            new Notice(e.message);
-          }
-        }
-        return true;
+    return (editor: Editor, _view: MarkdownView) => {
+      try {
+        const action = new ActionType(editor.getDoc()).prepare();
+        this.withPromptName(editor, action);
+      } catch (e: any) {
+        /* eslint-disable-next-line no-new */
+        new Notice(e.message);
       }
-      return false;
     };
   }
 
