@@ -1,4 +1,5 @@
-import { Editor, EditorTransaction, EditorPosition } from 'obsidian';
+import { EditorTransaction, EditorPosition } from 'obsidian';
+import { EditorLike } from './editorLike';
 
 export interface PosRange {
   from: number;
@@ -31,7 +32,7 @@ export function newEnvironment(
 
 export function unwrapEnvironment(
   environment: Environment,
-  doc: Editor,
+  doc: EditorLike,
 ): EditorTransaction {
   return {
     changes: [
@@ -47,7 +48,7 @@ export function unwrapEnvironment(
 
 export function changeEnvironment(
   environment: Environment,
-  doc: Editor,
+  doc: EditorLike,
   name: string,
 ): EditorTransaction {
   const change = {

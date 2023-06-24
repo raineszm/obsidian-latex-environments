@@ -1,9 +1,10 @@
 import { Action } from './action';
 import { newEnvironment } from '../environment';
-import { Editor, EditorTransaction } from 'obsidian';
+import { EditorTransaction } from 'obsidian';
+import { EditorLike } from '../editorLike';
 
 export class WrapAction extends Action {
-  constructor(doc: Editor, public readonly addWhitespace = true) {
+  constructor(doc: EditorLike, public readonly addWhitespace = true) {
     super(doc);
   }
 
