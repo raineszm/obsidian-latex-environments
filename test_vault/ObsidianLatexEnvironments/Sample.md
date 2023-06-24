@@ -19,3 +19,15 @@ $$
 x&y&z
 \end{array}
 $$
+
+$$
+\begin{pmatrix}
+1&0\\
+0&1
+\end{pmatrix}
+\begin{pmatrix}
+1&i\\
+i&1
+\end{pmatrix}
++2
+$$
