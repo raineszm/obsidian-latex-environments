@@ -6,7 +6,7 @@ import { InsertAction } from './actions/insertAction';
 import { ChangeAction } from './actions/changeAction';
 import { Action } from './actions/action';
 import { DeleteAction } from './actions/deleteAction';
-import { EditorLike, EditorShim } from './editorLike';
+import { EditorLike } from './editorLike';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
@@ -43,8 +43,7 @@ export default class LatexEnvironments extends Plugin {
   ) {
     return (editor: Editor, _view: MarkdownView) => {
       try {
-        const doc = new EditorShim(editor);
-        const action = new ActionType(doc).prepare();
+        const action = new ActionType(editor).prepare();
         this.withPromptName(editor, action);
       } catch (e: any) {
         /* eslint-disable-next-line no-new */
