@@ -13,7 +13,7 @@ export interface EditorLike {
 
   getValue: () => string;
 
-  somethingSelected: () => Boolean;
+  somethingSelected: () => boolean;
 
   transaction: (editorTransaction: EditorTransaction) => void;
 
