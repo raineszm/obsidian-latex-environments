@@ -1,4 +1,5 @@
 import { PosRange } from '../src/environment';
+import { EditorPosition } from 'obsidian';
 
 export interface DocInfo {
   text: string;
@@ -18,33 +19,33 @@ export function fromString(template: string): DocInfo {
     },
   };
 }
-//
-// export function allCursorsFromString(str: string): CodeMirror.Position[] {
-//   const cursors = [];
-//   const lines = str.split('\n');
-//   for (let i = 0; i < lines.length; i++) {
-//     const ch = lines[i].indexOf('|');
-//     if (ch !== -1) {
-//       cursors.push({ ch: ch, line: i });
-//     }
-//   }
-//   return cursors;
-// }
-//
-// export function cursorFromString(str: string): CodeMirror.Position {
-//   const cursor = allCursorsFromString(str).shift();
-//   if (cursor === undefined) {
-//     return { ch: -1, line: -1 };
-//   }
-//   return cursor;
-// }
-//
-// export function valueAndCursor(str: string): {
-//   value: string;
-//   cursor: CodeMirror.Position;
-// } {
-//   return {
-//     value: str.replace('|', ''),
-//     cursor: cursorFromString(str),
-//   };
-// }
+
+export function allCursorsFromString(str: string): EditorPosition[] {
+  const cursors = [];
+  const lines = str.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const ch = lines[i].indexOf('|');
+    if (ch !== -1) {
+      cursors.push({ ch: ch, line: i });
+    }
+  }
+  return cursors;
+}
+
+export function cursorFromString(str: string): EditorPosition {
+  const cursor = allCursorsFromString(str).shift();
+  if (cursor === undefined) {
+    return { ch: -1, line: -1 };
+  }
+  return cursor;
+}
+
+export function valueAndCursor(str: string): {
+  value: string;
+  cursor: EditorPosition;
+} {
+  return {
+    value: str.replace('|', ''),
+    cursor: cursorFromString(str),
+  };
+}

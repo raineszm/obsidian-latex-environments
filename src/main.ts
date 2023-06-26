@@ -6,6 +6,7 @@ import { InsertAction } from './actions/insertAction';
 import { ChangeAction } from './actions/changeAction';
 import { Action } from './actions/action';
 import { DeleteAction } from './actions/deleteAction';
+import { EditorLike } from './editorLike';
 
 export default class LatexEnvironments extends Plugin {
   public settings: LatexEnvironmentsSettings = new LatexEnvironmentsSettings();
@@ -38,11 +39,11 @@ export default class LatexEnvironments extends Plugin {
   }
 
   private mathModeCallback<A extends Action>(
-    ActionType: new (doc: Editor) => A,
+    ActionType: new (doc: EditorLike) => A,
   ) {
     return (editor: Editor, _view: MarkdownView) => {
       try {
-        const action = new ActionType(editor.getDoc()).prepare();
+        const action = new ActionType(editor).prepare();
         this.withPromptName(editor, action);
       } catch (e: any) {
         /* eslint-disable-next-line no-new */
@@ -51,7 +52,7 @@ export default class LatexEnvironments extends Plugin {
     };
   }
 
-  private withPromptName(editor: Editor, action: Action): void {
+  private withPromptName(editor: EditorLike, action: Action): void {
     const call = (envName: string): void => {
       editor.transaction(action.transaction(envName));
       editor.focus();
