@@ -1,5 +1,6 @@
 import { EditorTransaction, EditorPosition } from 'obsidian';
 import { EditorLike } from './editorLike';
+import { MathBlock } from './mathblock';
 
 export interface PosRange {
   from: number;
@@ -27,6 +28,43 @@ export function newEnvironment(
         line: cursor.line + 1, // move our caret to just before the beginning of contents
       },
     },
+  };
+}
+
+export function wrapSelection(
+  name: string,
+  cursor: EditorPosition,
+  contents: string = '',
+): EditorTransaction {
+  const pad = getPad(contents);
+  return {
+    replaceSelection: `\\begin{${name}}${pad}${contents}${pad}\\end{${name}}`,
+    selection: {
+      from: {
+        ch: 0,
+        line: cursor.line + 1, // move our caret to just before the beginning of contents
+      },
+    },
+  };
+}
+
+export function wrapBlock(
+  name: string,
+  doc: EditorLike,
+  block: MathBlock,
+): EditorTransaction {
+  const blockText = block.text.slice(block.startPosition, block.endPosition);
+  const contents = blockText.trim();
+  const pad = getPad(contents);
+  return {
+    changes: [
+      {
+        from: doc.offsetToPos(block.startPosition),
+        to: doc.offsetToPos(block.endPosition),
+        text: `\\begin{${name}}${pad}${contents}${pad}\\end{${name}}`,
+      },
+    ],
+    selection: { from: doc.getCursor() },
   };
 }
 

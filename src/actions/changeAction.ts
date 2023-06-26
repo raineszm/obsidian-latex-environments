@@ -16,11 +16,8 @@ export class ChangeAction extends Action {
     const cursor = this.doc.posToOffset(this.doc.getCursor());
     const block = new MathBlock(this.doc.getValue(), cursor);
     this.current = block.getEnclosingEnvironment(cursor);
-    if (this.current === undefined) {
-      return new WrapAction(
-        this.doc,
-        block.startPosition === block.endPosition,
-      );
+    if (this.current === undefined || this.doc.somethingSelected()) {
+      return new WrapAction(this.doc);
     }
     this.name = this.current.name;
     return this;
