@@ -64,7 +64,7 @@ export class TestEditor implements EditorLike {
     return { line: line.number - 1, ch: offset - line.from };
   }
 
-  somethingSelected(): Boolean {
+  somethingSelected(): boolean {
     return this.view.state.selection.ranges.some(
       (r: SelectionRange) => !r.empty,
     );
