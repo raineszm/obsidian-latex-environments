@@ -32,13 +32,9 @@ function runAction<A extends Action>(
 describe('InsertAction', () => {
   it('adds environment at point', () => {
     const input = '$$|$$';
-    const expected = [
-      '$$',
-      '\\begin{equation}',
-      '|',
-      '\\end{equation}',
-      '$$',
-    ].join('\n');
+    const expected = ['$$\\begin{equation}', '|', '\\end{equation}$$'].join(
+      '\n',
+    );
     const { value, cursor } = valueAndCursor(expected);
     const doc = runAction(input, InsertAction);
     expect(doc.getValue()).toBe(value);
@@ -59,15 +55,13 @@ describe('InsertAction', () => {
     expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
   });
 
-  it('adds newlines to separate from adjacent content', () => {
+  it("doesn't add newlines to separate from adjacent content", () => {
     const input = ['$$', 'x^2 + 1| - 2', '$$'].join('\n');
     const expected = [
       '$$',
-      'x^2 + 1',
-      '\\begin{equation}',
+      'x^2 + 1\\begin{equation}',
       '|',
-      '\\end{equation}',
-      ' - 2',
+      '\\end{equation} - 2',
       '$$',
     ].join('\n');
     const { value, cursor } = valueAndCursor(expected);
@@ -79,8 +73,7 @@ describe('InsertAction', () => {
     const input = ['$$', 'x^2 + 1|', '$$'].join('\n');
     const expected = [
       '$$',
-      'x^2 + 1',
-      '\\begin{equation}',
+      'x^2 + 1\\begin{equation}',
       '|',
       '\\end{equation}',
       '$$',
@@ -96,8 +89,7 @@ describe('InsertAction', () => {
       '$$',
       '\\begin{equation}',
       '|',
-      '\\end{equation}',
-      'x^2 + 1',
+      '\\end{equation}x^2 + 1',
       '$$',
     ].join('\n');
     const { value, cursor } = valueAndCursor(expected);
@@ -193,7 +185,7 @@ describe('DeleteAction', () => {
       '\n',
     );
 
-    const expected = ['$$', '|x^2 + 1', '$$'].join('\n');
+    const expected = '$$|x^2 + 1$$';
 
     const { value, cursor } = valueAndCursor(expected);
     const doc = runAction(input, DeleteAction);
@@ -220,13 +212,11 @@ describe('DeleteAction', () => {
       '\\end{gather}$$',
     ].join('\n');
     const expected = [
-      '$$',
-      'x^2|=2\\\\',
+      '$$x^2|=2\\\\',
       '\\begin{pmatrix}',
       '1&2\\\\',
       '3&4',
-      '\\end{pmatrix}',
-      '$$',
+      '\\end{pmatrix}$$',
     ].join('\n');
 
     const { value, cursor } = valueAndCursor(expected);
@@ -245,10 +235,8 @@ describe('DeleteAction', () => {
     ].join('\n');
     const expected = [
       '$$\\begin{equation}',
-      '',
       'x^2|=2\\\\',
       'y^2=3',
-      '',
       '\\end{equation}$$',
     ].join('\n');
 
