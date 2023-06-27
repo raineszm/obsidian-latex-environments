@@ -80,15 +80,6 @@ export function unwrapEnvironment(
   environment: Environment,
   doc: EditorLike,
 ): EditorTransaction {
-  let cursor = doc.getCursor();
-  if (justWhitespace(environment.contents.split('\n', 1)[0])) {
-    // If the first line of the environment is just whitespace, we'll
-    // move the cursor to the following line
-    cursor = {
-      line: cursor.line - 1,
-      ch: cursor.ch + doc.offsetToPos(environment.begin.from).ch,
-    };
-  }
   return {
     changes: [
       {
@@ -97,7 +88,7 @@ export function unwrapEnvironment(
         to: doc.offsetToPos(environment.end.to),
       },
     ],
-    selection: { from: cursor },
+    selection: { from: doc.getCursor() },
   };
 }
 
@@ -125,13 +116,9 @@ function padContents(contents: string, padEmpty: boolean = false): string {
   )}`;
 }
 
-function justWhitespace(text: string): boolean {
-  return text.match(/^[ \t]*$/) != null;
-}
-
 function getPad(text: string, padEmpty: boolean = false): string {
   if (text.length === 0 && padEmpty) return '\n';
-  if (text.length === 0 || justWhitespace(text)) return '';
+  if (text.length === 0 || text.match(/^[ \t]*$/) != null) return '';
   return '\n';
 }
 
