@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.3.0...0.4.0) (2023-06-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **plugin:** obsidian api 0.12.12 or higher now required
+
+### Bug Fixes
+
+* **action:** fix spacing and cursor position ([a8f3e4b](https://github.com/raineszm/obsidian-latex-environments/commit/a8f3e4bb8fc40f69a370aa389d9e8b629a9bf254))
+* **editorlike:** change type of somethingSelected() to boolean ([fea3709](https://github.com/raineszm/obsidian-latex-environments/commit/fea37092e5ae49e3247a882e36486f0643a356d1))
+
+
+* **plugin:** update plugin to use editorCallback ([e9970b6](https://github.com/raineszm/obsidian-latex-environments/commit/e9970b675b72acb738363e37e35f7e78a3c260d7))
+
 ## [0.3.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.2.1...0.3.0) (2022-02-18)
 
 
