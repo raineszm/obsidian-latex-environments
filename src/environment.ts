@@ -19,9 +19,11 @@ export function newEnvironment(
   cursor: EditorPosition,
   contents: string = '',
 ): EditorTransaction {
-  const pad = getPad(contents);
   return {
-    replaceSelection: `\\begin{${name}}${pad}${contents}${pad}\\end{${name}}`,
+    replaceSelection: `\\begin{${name}}${padContents(
+      contents,
+      true,
+    )}\\end{${name}}`,
     selection: {
       from: {
         ch: 0,
@@ -36,9 +38,8 @@ export function wrapSelection(
   cursor: EditorPosition,
   contents: string = '',
 ): EditorTransaction {
-  const pad = getPad(contents);
   return {
-    replaceSelection: `\\begin{${name}}${pad}${contents}${pad}\\end{${name}}`,
+    replaceSelection: `\\begin{${name}}${padContents(contents)}\\end{${name}}`,
     selection: {
       from: {
         ch: 0,
@@ -54,17 +55,24 @@ export function wrapBlock(
   block: MathBlock,
 ): EditorTransaction {
   const blockText = block.text.slice(block.startPosition, block.endPosition);
-  const contents = blockText.trim();
-  const pad = getPad(contents);
+  // Handle the case where the cursor on the beginning line of the block
+  let cursor = doc.getCursor();
+  const start = doc.offsetToPos(block.startPosition);
+  if (cursor.line === start.line) {
+    cursor = {
+      line: cursor.line + 1,
+      ch: 0,
+    };
+  }
   return {
     changes: [
       {
         from: doc.offsetToPos(block.startPosition),
         to: doc.offsetToPos(block.endPosition),
-        text: `\\begin{${name}}${pad}${contents}${pad}\\end{${name}}`,
+        text: `\\begin{${name}}${padContents(blockText)}\\end{${name}}`,
       },
     ],
-    selection: { from: doc.getCursor() },
+    selection: { from: cursor },
   };
 }
 
@@ -100,10 +108,17 @@ export function changeEnvironment(
   };
 }
 
-function getPad(text: string): string {
-  if (text.length > 0 && text.match(/^[ \t]*$/) != null) {
-    return '';
-  }
+function padContents(contents: string, padEmpty: boolean = false): string {
+  const lines = contents.split('\n');
+  return `${getPad(lines[0], padEmpty)}${contents}${getPad(
+    lines[lines.length - 1],
+    padEmpty,
+  )}`;
+}
+
+function getPad(text: string, padEmpty: boolean = false): string {
+  if (text.length === 0 && padEmpty) return '\n';
+  if (text.length === 0 || text.match(/^[ \t]*$/) != null) return '';
   return '\n';
 }
 
