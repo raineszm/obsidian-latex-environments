@@ -1,22 +1,26 @@
 import { Action } from './action';
-import { newEnvironment } from '../environment';
+import { wrapSelection, wrapBlock } from '../environment';
 import { EditorTransaction } from 'obsidian';
-import { EditorLike } from '../editorLike';
+import { MathBlock } from '../mathblock';
 
 export class WrapAction extends Action {
-  constructor(doc: EditorLike, public readonly addWhitespace = true) {
-    super(doc);
-  }
-
   prepare(): Action {
     return this;
   }
 
   transaction(envName: string): EditorTransaction {
-    return newEnvironment(
-      envName,
-      this.doc.getCursor(),
-      this.doc.getSelection(),
+    if (this.doc.somethingSelected()) {
+      return wrapSelection(
+        envName,
+        this.doc.getCursor(),
+        this.doc.getSelection(),
+      );
+    }
+
+    const block = new MathBlock(
+      this.doc.getValue(),
+      this.doc.posToOffset(this.doc.getCursor()),
     );
+    return wrapBlock(envName, this.doc, block);
   }
 }
