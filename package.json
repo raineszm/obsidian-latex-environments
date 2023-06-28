@@ -1,6 +1,6 @@
 {
   "name": "obsidian-latex-environments",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Quickly insert and change latex environments within math blocks in Obsidian.",
   "main": "main.js",
   "scripts": {
