@@ -177,6 +177,58 @@ describe('ChangeAction', () => {
     expect(doc.getValue()).toBe(value);
     expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
   });
+
+  it('changing only modifies current math block', () => {
+    const input = ['$$', '|x^2 + 1', '$$', '', '$$', 'y^2+2', '$$'].join('\n');
+    const expected = [
+      '$$\\begin{equation}',
+      '|x^2 + 1',
+      '\\end{equation}$$',
+      '',
+      '$$',
+      'y^2+2',
+      '$$',
+    ].join('\n');
+
+    const { value, cursor } = valueAndCursor(expected);
+    const doc = runAction(input, ChangeAction);
+    expect(doc.getValue()).toBe(value);
+    expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
+  });
+
+  it('wrapping only modifies current math block', () => {
+    const input = [
+      '$$',
+      'x^2',
+      '$$',
+      '\n',
+      '$$',
+      '|x + 2 ',
+      '\\begin{array}',
+      '1&2&3\\\\',
+      'x&y&z',
+      '\\end{array}',
+      '$$',
+    ].join('\n');
+    const expected = [
+      '$$',
+      'x^2',
+      '$$',
+      '\n',
+      '$$\\begin{equation}',
+      '|x + 2 ',
+      '\\begin{array}',
+      '1&2&3\\\\',
+      'x&y&z',
+      '\\end{array}',
+      '\\end{equation}$$',
+    ].join('\n');
+
+    const { value, cursor } = valueAndCursor(expected);
+    const doc = runAction(input, ChangeAction);
+    expect(doc.getValue()).toBe(value);
+    expect(doc.getCursor()).toStrictEqual(expect.objectContaining(cursor));
+  });
 });
 
 describe('DeleteAction', () => {
