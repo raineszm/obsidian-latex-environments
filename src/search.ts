@@ -37,7 +37,7 @@ export class SearchCursor {
 
   public findPrevious(): RegExpMatchArray | undefined {
     const reverseRegex = new RegExp(
-      `(?<full>${this.regex.source})(?!.*[\\r\\n]*.*\\k<full>)`,
+      `(?<full>${this.regex.source})(?![\\s\\S]*\\k<full>)`,
       this.regex.flags,
     );
     const text = this.text.slice(0, this._caret);
