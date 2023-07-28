@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.2](https://github.com/raineszm/obsidian-latex-environments/compare/0.4.1...0.4.2) (2023-07-28)
+
 ### [0.4.1](https://github.com/raineszm/obsidian-latex-environments/compare/0.4.0...0.4.1) (2023-06-28)
 
 ## [0.4.0](https://github.com/raineszm/obsidian-latex-environments/compare/0.3.0...0.4.0) (2023-06-27)
